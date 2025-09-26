@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import StudyCard from '@/components/ui/StudyCard'
 import {
   Calendar,
   Clock,
@@ -216,23 +217,23 @@ export default function SchedulePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-4">
-        <div className="mx-auto max-w-6xl space-y-6">
-          <div className="space-y-4">
-            <div className="h-8 bg-muted rounded w-64 animate-pulse"></div>
-            <div className="h-4 bg-muted rounded w-96 animate-pulse"></div>
+      <div className="min-h-screen bg-white relative overflow-hidden">
+        {/* Background Gradient Blobs */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="relative top-10 left-10 w-72 h-72 bg-gradient-to-br from-pink-200 to-purple-200 rounded-full  opacity-10 " />
+          <div className="absolute top-40 right-20 w-96 h-96 bg-gradient-to-br from-blue-200 to-cyan-200 rounded-full blur-3xl opacity-25 animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute bottom-20 left-1/4 w-80 h-80 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '2s' }} />
+          <div className="absolute bottom-40 right-1/3 w-64 h-64 bg-gradient-to-br from-cyan-200 to-blue-200 rounded-full blur-3xl opacity-30 animate-pulse" style={{ animationDelay: '3s' }} />
+        </div>
+        
+        <div className="relative z-10 mx-auto max-w-7xl p-4 sm:p-6 lg:p-8 space-y-8">
+          <div className="text-center space-y-4">
+            <div className="h-12 bg-gray-200 rounded w-96 mx-auto animate-pulse"></div>
+            <div className="h-6 bg-gray-200 rounded w-64 mx-auto animate-pulse"></div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {[...Array(7)].map((_, i) => (
-              <Card key={i} className="animate-pulse">
-                <CardHeader>
-                  <div className="h-6 bg-muted rounded w-24"></div>
-                  <div className="h-4 bg-muted rounded w-32"></div>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-20 bg-muted rounded"></div>
-                </CardContent>
-              </Card>
+              <div key={i} className="rounded-2xl shadow-lg bg-gray-100 animate-pulse h-80"></div>
             ))}
           </div>
         </div>
@@ -242,17 +243,27 @@ export default function SchedulePage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-4">
-        <div className="mx-auto max-w-6xl">
-          <Card>
-            <CardContent className="p-6 text-center">
-              <AlertCircle className="h-12 w-12 mx-auto text-red-500 mb-4" />
-              <p className="text-red-600 font-medium mb-2">{error}</p>
-              <Button onClick={() => fetchSchedule(true)} className="mt-4">
-                Try Again
-              </Button>
-            </CardContent>
-          </Card>
+      <div className="min-h-screen bg-white relative overflow-hidden">
+        {/* Background Gradient Blobs */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-pink-200 to-purple-200 rounded-full blur-3xl opacity-30 animate-pulse" />
+          <div className="absolute top-40 right-20 w-96 h-96 bg-gradient-to-br from-blue-200 to-cyan-200 rounded-full blur-3xl opacity-25 animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute bottom-20 left-1/4 w-80 h-80 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '2s' }} />
+          <div className="absolute bottom-40 right-1/3 w-64 h-64 bg-gradient-to-br from-cyan-200 to-blue-200 rounded-full blur-3xl opacity-30 animate-pulse" style={{ animationDelay: '3s' }} />
+        </div>
+        
+        <div className="relative z-10 mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
+          <div className="text-center space-y-6">
+            <AlertCircle className="h-16 w-16 mx-auto text-red-500" />
+            <h1 className="text-2xl font-bold text-gray-900">Something went wrong</h1>
+            <p className="text-red-600 font-medium">{error}</p>
+            <Button 
+              onClick={() => fetchSchedule(true)} 
+              className="px-6 py-3 rounded-lg border border-gray-300 hover:bg-gray-100 transition-all duration-200 font-medium"
+            >
+              Try Again
+            </Button>
+          </div>
         </div>
       </div>
     )
@@ -260,52 +271,58 @@ export default function SchedulePage() {
 
   if (!scheduleData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-4">
-        <div className="mx-auto max-w-6xl">
-          <Card>
-            <CardContent className="p-6 text-center">
-              <Brain className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <p className="text-muted-foreground">
-                No schedule data available
-              </p>
-            </CardContent>
-          </Card>
+      <div className="min-h-screen bg-white relative overflow-hidden">
+        {/* Background Gradient Blobs */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-pink-200 to-purple-200 rounded-full blur-3xl opacity-30 animate-pulse" />
+          <div className="absolute top-40 right-20 w-96 h-96 bg-gradient-to-br from-blue-200 to-cyan-200 rounded-full blur-3xl opacity-25 animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute bottom-20 left-1/4 w-80 h-80 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '2s' }} />
+          <div className="absolute bottom-40 right-1/3 w-64 h-64 bg-gradient-to-br from-cyan-200 to-blue-200 rounded-full blur-3xl opacity-30 animate-pulse" style={{ animationDelay: '3s' }} />
+        </div>
+        
+        <div className="relative z-10 mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
+          <div className="text-center space-y-6">
+            <Brain className="h-16 w-16 mx-auto text-gray-400" />
+            <h1 className="text-2xl font-bold text-gray-900">No schedule data available</h1>
+            <p className="text-gray-600">Please try generating a new schedule</p>
+          </div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 p-4 sm:p-6 lg:p-8">
-      <div className="mx-auto max-w-7xl space-y-8">
+    <div className="min-h-screen bg-white relative overflow-hidden">
+      {/* Background Gradient Blobs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-pink-200 to-purple-200 rounded-full blur-3xl opacity-30 animate-pulse" />
+        <div className="absolute top-40 right-20 w-96 h-96 bg-gradient-to-br from-blue-200 to-cyan-200 rounded-full blur-3xl opacity-25 animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute bottom-20 left-1/4 w-80 h-80 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '2s' }} />
+        <div className="absolute bottom-40 right-1/3 w-64 h-64 bg-gradient-to-br from-cyan-200 to-blue-200 rounded-full blur-3xl opacity-30 animate-pulse" style={{ animationDelay: '3s' }} />
+      </div>
+      
+      <div className="relative z-10 mx-auto max-w-7xl p-4 sm:p-6 lg:p-8 space-y-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+          className="text-center space-y-4"
         >
           <div className="space-y-2">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                <Calendar className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
-                  Personalized Schedule
-                </h1>
-                <p className="text-sm text-slate-600 dark:text-slate-300">
-                  {getCurrentDate()}
-                </p>
-              </div>
-            </div>
+            <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 tracking-tight">
+              Your 7-Day Study Plan
+            </h1>
+            <p className="text-lg text-gray-600 font-medium">
+              {getCurrentDate()}
+            </p>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex justify-center">
             <Button
               onClick={handleGenerateSchedule}
               disabled={generating}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 px-6 py-3 rounded-lg border border-gray-300 hover:bg-gray-100 transition-all duration-200 font-medium"
             >
               {generating ? (
                 <RotateCcw className="w-4 h-4 animate-spin" />
@@ -491,12 +508,8 @@ export default function SchedulePage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.4 }}
-                  className="space-y-6"
+                  className="space-y-8"
                 >
-                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-3">
-                    <Calendar className="text-blue-500" />
-                    Your 7-Day Study Plan
-                  </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {(
                       scheduleData.weeklySchedule ||
@@ -515,132 +528,39 @@ export default function SchedulePage() {
                       )
                       const isPastOrToday = adjustedDayDate <= today
 
+                      // Define badge gradient combinations for each card
+                      const badgeGradients = [
+                        'from-blue-500 to-purple-600',
+                        'from-pink-500 to-red-600',
+                        'from-green-500 to-teal-600',
+                        'from-orange-500 to-pink-600',
+                        'from-purple-500 to-indigo-600',
+                        'from-cyan-500 to-blue-600',
+                        'from-rose-500 to-pink-600'
+                      ]
+
+                      const badgeGradient = badgeGradients[index % badgeGradients.length]
+
                       return (
-                        <motion.div
+                        <StudyCard
                           key={index}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{
-                            duration: 0.5,
-                            delay: 0.5 + index * 0.05,
-                          }}
-                          whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                          className={`rounded-xl shadow-lg transition-all ${
-                            isToday
-                              ? 'ring-2 ring-blue-500 ring-offset-2 ring-offset-slate-50 dark:ring-offset-slate-900'
-                              : 'shadow-md'
-                          } ${
-                            day.completed
-                              ? 'bg-green-50/50 dark:bg-green-900/10'
-                              : 'bg-white dark:bg-slate-800'
-                          }`}
-                        >
-                          <CardHeader className="pb-3">
-                            <div className="flex items-center justify-between">
-                              <CardTitle className="text-sm font-medium">
-                                {day.day}
-                              </CardTitle>
-                              {isToday && (
-                                <Badge variant="default" className="text-xs">
-                                  Today
-                                </Badge>
-                              )}
-                            </div>
-                            <CardDescription className="text-xs">
-                              {new Date(day.date).toLocaleDateString('en-US', {
-                                month: 'short',
-                                day: 'numeric',
-                              })}
-                            </CardDescription>
-                          </CardHeader>
-
-                          <CardContent className="space-y-3">
-                            {day.testId ? (
-                              <>
-                                <div className="space-y-2">
-                                  <h3 className="font-medium text-sm text-slate-900 dark:text-white line-clamp-2">
-                                    {day.testTitle}
-                                  </h3>
-
-                                  <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
-                                    <Clock className="w-3 h-3" />
-                                    {day.durationInMinutes} min
-                                  </div>
-
-                                  <div className="flex flex-wrap gap-1">
-                                    {day.sections.slice(0, 2).map((section) => (
-                                      <Badge
-                                        key={section}
-                                        variant="secondary"
-                                        className={`text-xs ${getSectionColor(
-                                          section
-                                        )}`}
-                                      >
-                                        {getSectionIcon(section)}{' '}
-                                        {section.replace('_', ' ')}
-                                      </Badge>
-                                    ))}
-                                    {day.sections.length > 2 && (
-                                      <Badge
-                                        variant="secondary"
-                                        className="text-xs"
-                                      >
-                                        +{day.sections.length - 2} more
-                                      </Badge>
-                                    )}
-                                  </div>
-
-                                  <div className="space-y-1">
-                                    <div className="text-xs text-slate-600 dark:text-slate-300">
-                                      <strong>Focus:</strong> {day.focus}
-                                    </div>
-                                    <div className="text-xs text-slate-500 dark:text-slate-400">
-                                      {day.reason}
-                                    </div>
-                                  </div>
-                                </div>
-
-                                <div className="pt-2">
-                                  {day.completed ? (
-                                    <div className="flex items-center justify-center text-xs text-green-600 dark:text-green-400 font-semibold p-2 bg-green-100 dark:bg-green-900/30 rounded-md">
-                                      <CheckCircle className="w-4 h-4 mr-2" />
-                                      Completed
-                                    </div>
-                                  ) : day.isAttempted ? (
-                                    <Button
-                                      size="sm"
-                                      variant="outline"
-                                      className="w-full text-xs"
-                                      onClick={() =>
-                                        handleTestAction(day, 'reattempt')
-                                      }
-                                    >
-                                      <RotateCcw className="w-3 h-3 mr-1" />
-                                      Re-attempt
-                                    </Button>
-                                  ) : (
-                                    <Button
-                                      size="sm"
-                                      className="w-full text-xs"
-                                      onClick={() =>
-                                        handleTestAction(day, 'attempt')
-                                      }
-                                    >
-                                      <BookOpen className="w-3 h-3 mr-1" />
-                                      Start Test
-                                    </Button>
-                                  )}
-                                </div>
-                              </>
-                            ) : (
-                              <div className="text-center py-4">
-                                <div className="text-slate-400 dark:text-slate-500 text-sm">
-                                  No test available
-                                </div>
-                              </div>
-                            )}
-                          </CardContent>
-                        </motion.div>
+                          day={day.day}
+                          date={new Date(day.date).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                          })}
+                          testName={day.testTitle || 'No test available'}
+                          duration={day.durationInMinutes || 0}
+                          badgeLabel={day.sections?.[0]?.replace('_', ' ') || 'Study'}
+                          badgeGradient={badgeGradient}
+                          focusText={day.focus || 'Focus on your studies'}
+                          isToday={isToday}
+                          isCompleted={day.completed}
+                          isAttempted={day.isAttempted}
+                          onTestAction={(action) => handleTestAction(day, action)}
+                          sections={day.sections || []}
+                          reason={day.reason || ''}
+                        />
                       )
                     })}
                   </div>

@@ -142,8 +142,8 @@ export async function GET(req) {
       strongSections: analytics.insights.bestPerformingSection,
     }
 
-    // Generate AI recommendations
-    const aiRecommendations = await generateAIRecommendations(
+    // Generate algorithmic recommendations (no AI)
+    const aiRecommendations = await generateAlgorithmicRecommendations(
       analyticsData,
       allTests,
       attemptedTestIds
@@ -203,168 +203,146 @@ export async function GET(req) {
   }
 }
 
-async function generateAIRecommendations(
+async function generateAlgorithmicRecommendations(
   analytics,
   allTests,
   attemptedTestIds
 ) {
   try {
     // Filter available tests (not attempted this week)
-    const availableTests = allTests.filter(
+    let availableTests = allTests.filter(
       (test) => !attemptedTestIds.has(test.id)
     )
 
-    // Create a concise list of available tests for the AI context
-    const testMenu = availableTests.map((test) => {
-      const lastAttempt = test.testAttempts[0] // It's the latest one
-      return {
-        id: test.id,
-        title: test.title,
-        sections: [...new Set(test.questions.map((q) => q.section))],
-        lastScore:
-          lastAttempt && typeof lastAttempt.percentage === 'number'
-            ? `${lastAttempt.percentage.toFixed(1)}%`
-            : 'Not Attempted',
-      }
+    // If we don't have enough tests for the week, include some attempted tests
+    if (availableTests.length < 7) {
+      console.log(`Only ${availableTests.length} tests available, including some attempted tests`)
+      const attemptedTests = allTests.filter(
+        (test) => attemptedTestIds.has(test.id)
+      )
+      availableTests = [...availableTests, ...attemptedTests.slice(0, 7 - availableTests.length)]
+    }
+
+    console.log('Available tests for schedule:', {
+      totalTests: availableTests.length,
+      testTitles: availableTests.map(t => t.title)
     })
 
-    // Prepare context for AI
-    const context = `You are an expert CLAT tutor. A student needs a personalized 7-day study schedule.
+    // Algorithmic test selection based on performance data
+    const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    const usedTestIds = new Set()
+    const weeklySchedule = []
 
-Student's Performance Summary:
-- Average Score: ${analytics.averageScore.toFixed(1)}%
-- Strongest Section: ${analytics.strongSections}
-- Weakest Section: ${analytics.weakSections}
-
-Here is a menu of available tests for the week. Some may have been attempted before, and their last score is listed.
-Test Menu:
-${JSON.stringify(testMenu, null, 2)}
-
-Your task is to create a 7-day study plan (Monday to Sunday).
-- DO NOT repeat any test from the menu within the week.
-- Choose tests that specifically target the student's WEAKEST section.
-- Include 1-2 tests for their STRONGEST section to maintain it.
-- Fill the rest of the week with varied tests.
-- The "focus" and "reason" for each day must be specific and directly related to the test chosen and the student's performance data.
-
-Return a single JSON object in the specified format.
-`
-
-    const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              {
-                text: context,
-              },
-            ],
-          },
-        ],
-        generationConfig: {
-          responseMimeType: 'application/json',
-        },
+    // Get tests by section for targeted selection
+    const testsBySection = {
+      weak: availableTests.filter(test => {
+        const testSections = [...new Set(test.questions.map(q => q.section))]
+        return testSections.some(section => analytics.weakSections.includes(section))
       }),
-    })
-
-    if (!response.ok) {
-      const errorBody = await response.text()
-      throw new Error(`Gemini API error: ${response.status} - ${errorBody}`)
-    }
-
-    const data = await response.json()
-    const aiResponseText = data.candidates[0].content.parts[0].text
-    console.log('Gemini RAW Response:', aiResponseText) // For debugging
-    const aiResponse = JSON.parse(aiResponseText)
-
-    // Map AI recommendations to actual tests
-    const usedTestIds = new Set() // Track used tests to prevent repetition
-
-    // Handle different AI response formats
-    let scheduleArray = []
-    if (Array.isArray(aiResponse)) {
-      // AI returned array directly
-      scheduleArray = aiResponse
-    } else if (aiResponse.studyPlan) {
-      scheduleArray = aiResponse.studyPlan
-    } else if (aiResponse.study_schedule) {
-      scheduleArray = aiResponse.study_schedule
-    } else if (aiResponse.weeklySchedule) {
-      scheduleArray = aiResponse.weeklySchedule
-    }
-
-    console.log('Processing schedule array:', {
-      isArray: Array.isArray(aiResponse),
-      scheduleArrayLength: scheduleArray.length,
-      firstItem: scheduleArray[0],
-    })
-
-    const weeklySchedule = scheduleArray.map((day, index) => {
-      // Find a suitable test for this day
-      // First, try to find a test that matches the one AI recommended by title
-      const suitableTests = availableTests.filter((test) => {
-        const testSections = [...new Set(test.questions.map((q) => q.section))]
-        return testSections.some(
-          (section) =>
-            analytics.weakSections.includes(section) ||
-            analytics.strongSections.includes(section)
+      strong: availableTests.filter(test => {
+        const testSections = [...new Set(test.questions.map(q => q.section))]
+        return testSections.some(section => analytics.strongSections.includes(section))
+      }),
+      other: availableTests.filter(test => {
+        const testSections = [...new Set(test.questions.map(q => q.section))]
+        return !testSections.some(section => 
+          analytics.weakSections.includes(section) || 
+          analytics.strongSections.includes(section)
         )
       })
+    }
 
-      // Handle different AI response formats for test data
-      let testId = null
-      let testTitle = null
+    console.log('Tests by section:', {
+      weak: testsBySection.weak.length,
+      strong: testsBySection.strong.length,
+      other: testsBySection.other.length
+    })
 
-      if (day.test && day.test.id) {
-        // New format: test data is nested under 'test' property
-        testId = day.test.id
-        testTitle = day.test.title
-      } else {
-        // Old format: test data is directly on day object
-        testId = day.test_id || day.testId || null
-        testTitle = day.test_title || day.testTitle || null
+    // Generate 7-day schedule algorithmically
+    for (let i = 0; i < 7; i++) {
+      let selectedTest = null
+      let focus = ''
+      let reason = ''
+
+      // Day 1-3: Focus on weak sections
+      if (i < 3 && testsBySection.weak.length > 0) {
+        selectedTest = testsBySection.weak.find(test => !usedTestIds.has(test.id))
+        if (selectedTest) {
+          focus = `Improving ${analytics.weakSections.join(' and ')} skills`
+          reason = `Targeted practice for your weakest areas to build confidence and improve performance`
+        }
       }
-
-      let selectedTest = availableTests.find((t) => t.id === testId)
-
-      // Check if the AI-recommended test is already used
-      if (selectedTest && usedTestIds.has(selectedTest.id)) {
-        selectedTest = null // Reset if already used
+      
+      // Day 4-5: Mix of weak and strong sections
+      if (i >= 3 && i < 5) {
+        if (i === 3 && testsBySection.weak.length > 0) {
+          selectedTest = testsBySection.weak.find(test => !usedTestIds.has(test.id))
+          if (selectedTest) {
+            focus = `Continued ${analytics.weakSections.join(' and ')} practice`
+            reason = `Building on previous day's progress in your focus areas`
+          }
+        } else if (i === 4 && testsBySection.strong.length > 0) {
+          selectedTest = testsBySection.strong.find(test => !usedTestIds.has(test.id))
+          if (selectedTest) {
+            focus = `Maintaining ${analytics.strongSections.join(' and ')} excellence`
+            reason = `Keeping your strong areas sharp while working on improvements`
+          }
+        }
       }
-
-      // Fallback: If no test is found by ID (AI might hallucinate), find one with a matching title or use a suitable one.
-      if (!selectedTest) {
-        // First try to find by title (if not already used)
-        const titleMatch = availableTests.find(
-          (t) => t.title === testTitle && !usedTestIds.has(t.id)
-        )
-
-        if (titleMatch) {
-          selectedTest = titleMatch
-        } else {
-          // Find first suitable test that hasn't been used
-          selectedTest =
-            suitableTests.find((test) => !usedTestIds.has(test.id)) ||
-            availableTests.find((test) => !usedTestIds.has(test.id))
+      
+      // Day 6-7: Strong sections and variety
+      if (i >= 5) {
+        if (i === 5 && testsBySection.strong.length > 0) {
+          selectedTest = testsBySection.strong.find(test => !usedTestIds.has(test.id))
+          if (selectedTest) {
+            focus = `Advanced ${analytics.strongSections.join(' and ')} practice`
+            reason = `Pushing your strong areas to the next level`
+          }
+        } else if (i === 6) {
+          // Try other sections or any remaining test
+          selectedTest = testsBySection.other.find(test => !usedTestIds.has(test.id)) ||
+                        availableTests.find(test => !usedTestIds.has(test.id))
+          if (selectedTest) {
+            focus = 'Comprehensive practice'
+            reason = 'Well-rounded preparation covering all sections'
+          }
         }
       }
 
-      // Mark this test as used
-      if (selectedTest) {
-        usedTestIds.add(selectedTest.id)
+      // Fallback: Use any available test
+      if (!selectedTest) {
+        selectedTest = availableTests.find(test => !usedTestIds.has(test.id))
+        if (selectedTest) {
+          focus = 'General practice'
+          reason = 'Maintaining consistent study routine'
+        }
       }
 
-      if (!selectedTest) {
-        // If still no test, it's a fallback for an empty test bank
-        return {
-          day: day.day,
-          date: getDateForDay(index),
+      if (selectedTest) {
+        usedTestIds.add(selectedTest.id)
+        
+        weeklySchedule.push({
+          day: dayNames[i],
+          date: getDateForDay(i),
+          testId: selectedTest.id,
+          testTitle: selectedTest.title,
+          testType: selectedTest.type,
+          durationInMinutes: selectedTest.durationInMinutes,
+          sections: [...new Set(selectedTest.questions.map(q => q.section))],
+          focus: focus,
+          reason: reason,
+          difficulty: 'Intermediate',
+          isAttempted: selectedTest.testAttempts.length > 0,
+          lastScore: selectedTest.testAttempts[0]?.percentage || null,
+          completed: false,
+        })
+      } else {
+        // No test available
+        weeklySchedule.push({
+          day: dayNames[i],
+          date: getDateForDay(i),
           testId: null,
-          testTitle: 'No test available for this recommendation',
+          testTitle: 'No test available',
           testType: 'FREE',
           durationInMinutes: 0,
           sections: [],
@@ -374,100 +352,72 @@ Return a single JSON object in the specified format.
           isAttempted: false,
           lastScore: null,
           completed: false,
-        }
+        })
       }
-
-      return {
-        day: day.day,
-        date: getDateForDay(index),
-        testId: selectedTest.id,
-        testTitle: selectedTest.title,
-        testType: selectedTest.type,
-        durationInMinutes: selectedTest.durationInMinutes,
-        sections: [...new Set(selectedTest.questions.map((q) => q.section))],
-        focus: day.focus || 'General Practice',
-        reason: day.reason || 'Recommended for your current level',
-        difficulty: day.difficulty || 'Intermediate',
-        isAttempted: selectedTest.testAttempts.length > 0,
-        lastScore: selectedTest.testAttempts[0]?.percentage || null,
-        completed: false, // Add completion status
-      }
-    })
-
-    return {
-      weeklySchedule,
-      insights: aiResponse.insights || {
-        overallPerformance:
-          'Your personalized study schedule has been generated based on your performance data.',
-        strengths: ['Your strong areas have been identified'],
-        weaknesses: ['Focus areas for improvement have been highlighted'],
-        recommendations: [
-          'Follow the daily schedule to improve your performance',
-        ],
-      },
-      recommendations: aiResponse.insights?.recommendations || [],
     }
-  } catch (error) {
-    console.error('Error generating AI recommendations:', error)
-
-    // Fallback: Generate basic schedule without AI
-    const availableTests = allTests.filter(
-      (test) => !attemptedTestIds.has(test.id)
-    )
-
-    // Ensure no repetition in fallback schedule
-    const usedTestIds = new Set()
-    const weeklySchedule = Array.from({ length: 7 }, (_, index) => {
-      // Find next available test that hasn't been used
-      let test = availableTests.find((t) => !usedTestIds.has(t.id))
-
-      if (test) {
-        usedTestIds.add(test.id)
-      }
-
-      const days = [
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday',
-        'Saturday',
-        'Sunday',
-      ]
-
-      return {
-        day: days[index],
-        date: getDateForDay(index),
-        testId: test?.id || null,
-        testTitle: test?.title || 'No test available',
-        testType: test?.type || 'FREE',
-        durationInMinutes: test?.durationInMinutes || 60,
-        sections: test
-          ? [...new Set(test.questions.map((q) => q.section))]
-          : [],
-        focus: 'General Practice',
-        reason: 'Recommended for your current level',
-        difficulty: 'Intermediate',
-        isAttempted: test?.testAttempts?.length > 0 || false,
-        lastScore: test?.testAttempts?.[0]?.percentage || null,
-        completed: false, // Add completion status to fallback
-      }
-    })
 
     return {
       weeklySchedule,
       insights: {
-        overallPerformance:
-          "A brief, encouraging summary of the user's performance (3-4 sentences). Mention their strongest subject as a positive point and celebrate their progress. Then, gently point out their weakest subject as an area for growth. Conclude with a motivational sentence about the upcoming week's plan.",
-        strengths: [
-          "List 2-3 of the user's strongest subjects or topics, framed as accomplishments.",
-        ],
-        weaknesses: [
-          "List 2-3 of the user's weakest subjects or topics, framed as opportunities for growth.",
-        ],
+        overallPerformance: `Your personalized study schedule has been created based on your performance data. Your strongest areas are ${analytics.strongSections.join(' and ')}, while ${analytics.weakSections.join(' and ')} need focused attention. This week's plan balances improvement in weak areas with maintenance of your strengths.`,
+        strengths: analytics.strongSections,
+        weaknesses: analytics.weakSections,
         recommendations: [
-          "Provide 3 unique, actionable, and specific recommendations for the week. For example, instead of 'Practice more', suggest 'Focus on identifying trap answers in Logical Reasoning questions this week.'",
+          `Focus on ${analytics.weakSections.join(' and ')} in the first half of the week`,
+          `Maintain your ${analytics.strongSections.join(' and ')} skills in the second half`,
+          'Take breaks between tests to maintain focus and prevent burnout'
         ],
+      },
+      recommendations: [
+        `Focus on ${analytics.weakSections.join(' and ')} in the first half of the week`,
+        `Maintain your ${analytics.strongSections.join(' and ')} skills in the second half`,
+        'Take breaks between tests to maintain focus and prevent burnout'
+      ],
+    }
+
+  } catch (error) {
+    console.error('Error generating algorithmic recommendations:', error)
+
+    // Fallback: Generate basic schedule
+    const availableTests = allTests.filter(
+      (test) => !attemptedTestIds.has(test.id)
+    )
+
+    const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    const usedTestIds = new Set()
+    const weeklySchedule = []
+
+    for (let i = 0; i < 7; i++) {
+      const selectedTest = availableTests.find(test => !usedTestIds.has(test.id))
+      
+      if (selectedTest) {
+        usedTestIds.add(selectedTest.id)
+      }
+
+      weeklySchedule.push({
+        day: dayNames[i],
+        date: getDateForDay(i),
+        testId: selectedTest?.id || null,
+        testTitle: selectedTest?.title || 'No test available',
+        testType: selectedTest?.type || 'FREE',
+        durationInMinutes: selectedTest?.durationInMinutes || 0,
+        sections: selectedTest ? [...new Set(selectedTest.questions.map(q => q.section))] : [],
+        focus: 'General Practice',
+        reason: 'Recommended for your current level',
+        difficulty: 'Intermediate',
+        isAttempted: selectedTest?.testAttempts?.length > 0 || false,
+        lastScore: selectedTest?.testAttempts?.[0]?.percentage || null,
+        completed: false,
+      })
+    }
+
+    return {
+      weeklySchedule,
+      insights: {
+        overallPerformance: 'A basic study schedule has been generated. Complete more tests to get personalized recommendations.',
+        strengths: ['Complete more tests to identify strengths'],
+        weaknesses: ['Complete more tests to identify focus areas'],
+        recommendations: ['Take more tests to build a comprehensive profile'],
       },
       recommendations: ['Take more tests to build a comprehensive profile'],
     }
