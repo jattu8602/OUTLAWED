@@ -336,6 +336,8 @@ export default function LexiaPageClient() {
                     locked={false}
                     isAttempted={test.isAttempted}
                     lastScore={test.lastScore}
+                    obtainedMarks={test.obtainedMarks}
+                    totalMarks={test.totalMarks}
                     onAction={(action) => handleTestAction(test, action)}
                     userType={session?.user?.role}
                     latestAttemptId={test.latestAttemptId}

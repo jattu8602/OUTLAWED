@@ -37,6 +37,7 @@ export async function GET(request) {
 
     const testsWithAttemptData = lexiaTests.map((test) => {
       const latestAttempt = test.attempts[0]
+      const totalMarks = test.questionIds.length // Assuming 1 mark per question
       return {
         id: test.id,
         title: test.title,
@@ -49,6 +50,8 @@ export async function GET(request) {
         lastScore: latestAttempt?.percentage
           ? Number(latestAttempt.percentage.toFixed(2))
           : null,
+        obtainedMarks: latestAttempt?.score, // Add obtained marks
+        totalMarks: totalMarks, // Add total marks
         attemptedAt: latestAttempt?.completedAt,
         attemptCount: test.attempts.length,
         latestAttemptId: latestAttempt?.id,
