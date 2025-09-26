@@ -1,0 +1,48 @@
+# Lexia
+
+1. /dashboard/lexia - this gonna be the page where users can generate randomized tests by own  -  user generated tests are saved  in hostory in this page   - every user can generete their own tests
+
+2. how lexia will generate tests - lexia is gonna be a set of functions working directly with db -
+
+step 1 - user query (1. generate mock test (120 questions)     or     2. can generate sectional test)
+
+120 questions - ENGLISH - 22-26
+  GK_CA - 28-32
+  LEGAL_REASONING - 28-32
+  LOGICAL_REASONING - 22-26
+  QUANTITATIVE_TECHNIQUES - 10-14
+
+
+number of passage  --     ENGLISH - ~4-5 passages
+  GK_CA - ~5-6 passages
+  LEGAL_REASONING - ~5-6 passages
+  LOGICAL_REASONING - ~4-5 passages
+  QUANTITATIVE_TECHNIQUES - ~2-3 passages
+
+
+3. user can either generate the randomized  complete mock test  or can generate the sectional test
+
+
+
+4. if user clicks mock test  - you have to go to db and take exactly required data from the db as you can see the scema   -  questions are associated with passages  - after taking data you have to arrange question like from 1 to 120 question number  as well as passages  together   arranging passages first will help arranging their questions too              you have to arrange the test in subject wise -  in same sequence -  ENGLISH
+  GK_CA
+  LEGAL_REASONING
+  LOGICAL_REASONING
+  QUANTITATIVE_TECHNIQUES
+
+  for example ENGLISH  1 to 24  then GK_CA 25 to 52 then LEGAL_REASONING 53 to 84  then LOGICAL_REASONING 85 to 108 then  QUANTITATIVE_TECHNIQUES 109 to 120
+
+
+5. if user clicks on the sectional test and selected any section then you have to generate   from question number 1 to (some number ) - only for that section thats it
+
+
+6. finally as we are showing the tests in /dashboard same ui we will follow for the user generated test in lexia page   - the recently generated test we will show on top   the history model will be in bottom okay  the test generating model willl be above the history model in this page
+
+
+7. user can attempt the test in the test window and can reattempt it too  it will be saved  but wont effect the global leaderboard because its user generate test seperately  - user can generate as many tests he wants  and this generation will be saved on user side
+
+
+
+8. this lexia must not effect the current architecture  - it will only take the data from mongodb of tests passages questions answers explaination and all
+
+9. user can analyse this test too if taken 

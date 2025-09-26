@@ -1,0 +1,56 @@
+# personalized schedule
+
+- its gonna be a personalized schedule based page where ai will be guiding to student by generating a complete plan based on their previous analytics
+
+- you can take a reference how the analytics are generating in enhancedanalytics components and api using the current user based  , schema based data
+
+- your task is to make ai the schedule in /dashboard/schedule  - here the user will be getting the 7 days schedule every week from monday to saturday
+
+- check the users db if this particular user has given any tests or not ?? if not then show users some tests the user can give for analytics purpose
+
+ - if user has already given tests  generate their weekly schedule  (for existing user we have to give a trigger button)
+
+-  this trigger will get activate and generate the weekly schedule for users
+
+- give a button for now for testing
+
+- the schedule ui  will contain 7 days ui - current day like today fri 26 sept
+
+
+everyday user will get   1 tests based on the previous analytics
+7 days  - 7 tests     no test will we repeated until this week
+
+the ai will see the analytics and weak points of the user  and give the recommended test weekly
+you have to see the schema for this - basically for test showcase  you can take reference  from  /dashboard and the test page component that ui will use to analyze
+
+
+now bottom it the ai will be giving insights  whatever - basically i wanted to make something like personalized platform  in this schedule page can you help me 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- we will be using the gemini api key for this - (GEMINI_API_KEY="AIzaSyAbCe_cnuFas5NWy2axMb40WJEBixNVVZk")  - (const GEMINI_API_URL =
+  'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent')
+
+-
+
+
+

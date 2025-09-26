@@ -1,0 +1,74 @@
+# test taking and re attempt test funcanality -
+
+1. if clicked on button take test or re attemmpt test then a popup appeats - for taking test you will be transferred to the full screen mode do you want to proceed - escaping from full screen mode will auto submit the test forcefully or if you try to exit you may see a popup to submit test
+
+2. after accepting the above contions the user now eligible to take the test
+
+3. test layout -
+in top nav - always the test name , duration in hh:mm:ss appear and it starts decresing every second and if this time gets 00:00:00 then the test will submit atuomaitcally and all the marks and evaluation will proceed further
+
+in top nav - we will show test type - paid,  free      , total number of questions in top nav
+
+
+
+in bottom back  next, mark for later ,  time taken per question mm:ss (time taken per question this data we will be saving for every question depending on which user giving which test )  and submit button will be there
+
+
+in right side nav  - see we have 5 sections  - section         SectionType
+show sections and number of questions there  every question will be devided based on section - enum SectionType {
+  // We have 5 sections here
+  ENGLISH
+  GK_CA
+  LEGAL_REASONING
+  LOGICAL_REASONING
+  QUANTITATIVE_TECHNIQUES
+}
+
+how question numbers shown here
+initially questions will be arranged section wise like 1 2 3 4 5
+                                                      6 7 8 9 10
+initially all numbers will have white bg
+then if attempted then green
+if seen but not attempted then will show red
+if marked for later - then orange
+
+
+
+above layout wont be changing - now the changing part
+
+question
+if image is there show images or images
+if table is there then show table
+then for single correct show rounded optioins
+and for multi correct show tick options
+
+
+if these is any comprehension then it will appear in left side of this page and if there is not comprehension then the question and options field will take that space
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

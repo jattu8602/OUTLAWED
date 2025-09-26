@@ -1,0 +1,48 @@
+# Score Calculation in every test
+
+- currently the score marking system is not perfect and not same in all the pages
+make a universal score system and use this formula  and upload it in db too 
+
+
+Formula for percentage (with +1 and -0.25 marking):
+
+Marks Obtained = C - 0.25 * W
+Maximum Marks = T
+Percentage = ( (C - 0.25 * W) / T ) * 100
+
+Where:
+T = Total number of questions
+C = Number of correct answers
+W = Number of wrong answers
+U = Number of unattempted answers
+
+
+
+
+
+
+
+
+
+
+Examples:
+
+Case 1:
+T = 12, C = 1, W = 1, U = 10
+Marks = 1 - 0.25*1 = 0.75
+Percentage = (0.75 / 12) * 100 = 6.25%
+
+Case 2:
+T = 24, C = 1, W = 1, U = 22
+Marks = 1 - 0.25*1 = 0.75
+Percentage = (0.75 / 24) * 100 = 3.13%
+
+Case 3:
+T = 20, C = 5, W = 5, U = 10
+Marks = 5 - 0.25*5 = 3.75
+Percentage = (3.75 / 20) * 100 = 18.75%
+
+Case 4:
+T = 10, C = 7, W = 3, U = 0
+Marks = 7 - 0.25*3 = 6.25
+Percentage = (6.25 / 10) * 100 = 62.5%

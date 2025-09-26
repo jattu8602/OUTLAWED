@@ -1,0 +1,834 @@
+/* ========== FONT IMPORTS ========== */
+@import url('https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+/* ========== TAILWIND ========== */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========== BASE THEME VARIABLES ========== */
+@layer base {
+  :root {
+    /* Light mode colors inspired by the image */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    /* Primary - Blue from the image */
+    --primary: 221 83% 53%;
+    --primary-foreground: 210 40% 98%;
+
+    /* Secondary - Light gray */
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+
+    /* Muted - Subtle gray */
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 8% 46%;
+
+    /* Accent - Subtle highlight */
+    --accent: 220 14% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+
+    /* Destructive - Red */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    /* Border - Subtle borders */
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 221 83% 53%;
+    --radius: 0.75rem;
+
+    /* Fonts */
+    --font-sans: 'Host Grotesk', 'Inter', 'system-ui', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    /* Extended palette for better visual hierarchy */
+    --chart-1: 221 83% 53%;
+    --chart-2: 142 76% 36%;
+    --chart-3: 38 92% 50%;
+    --chart-4: 262 83% 58%;
+    --chart-5: 0 84% 60%;
+
+    /* Sidebar colors */
+    --sidebar: 0 0% 100%;
+    --sidebar-foreground: 222.2 84% 4.9%;
+    --sidebar-primary: 221 83% 53%;
+    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-accent: 220 14% 96%;
+    --sidebar-accent-foreground: 222.2 84% 4.9%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 221 83% 53%;
+
+    /* Utility vars */
+    --bg: #ffffff;
+    --fg: #1f1f1f;
+    --loader-bg: #f1f5f9;
+    --stroke: rgba(0, 0, 0, 0.1);
+    --font-instrument-serif: 'Instrument Serif', serif;
+
+    /* Status colors */
+    --success: 142 76% 36%;
+    --success-foreground: 210 40% 98%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 222.2 84% 4.9%;
+    --info: 221 83% 53%;
+    --info-foreground: 210 40% 98%;
+  }
+
+  .dark {
+    /* Dark mode colors with better contrast */
+    --background: 222 84% 5%;
+    --foreground: 210 40% 98%;
+    --card: 222 84% 5%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 84% 5%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Primary - Brighter blue for dark mode */
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 84% 5%;
+
+    /* Secondary - Darker gray */
+    --secondary: 217 33% 18%;
+    --secondary-foreground: 210 40% 98%;
+
+    /* Muted - Darker muted */
+    --muted: 217 33% 18%;
+    --muted-foreground: 215 20% 65%;
+
+    /* Accent - Darker accent */
+    --accent: 217 33% 18%;
+    --accent-foreground: 210 40% 98%;
+
+    /* Destructive - Darker red */
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    /* Border - Darker borders */
+    --border: 217 33% 18%;
+    --input: 217 33% 18%;
+    --ring: 217 91% 60%;
+
+    /* Dark charts/sidebar with better contrast */
+    --chart-1: 217 91% 60%;
+    --chart-2: 142 76% 36%;
+    --chart-3: 38 92% 50%;
+    --chart-4: 262 83% 58%;
+    --chart-5: 0 84% 60%;
+    --sidebar: 222 84% 5%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 222 84% 5%;
+    --sidebar-accent: 217 33% 18%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 18%;
+    --sidebar-ring: 217 91% 60%;
+
+    /* Status colors for dark mode */
+    --success: 142 76% 36%;
+    --success-foreground: 210 40% 98%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 222 84% 5%;
+    --info: 217 91% 60%;
+    --info-foreground: 222 84% 5%;
+  }
+}
+
+/* ========== GLOBAL RESET & TYPOGRAPHY ========== */
+@layer base {
+  * {
+    @apply border-border;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  *::-webkit-scrollbar {
+    display: none;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+  }
+}
+
+/* ========== CUSTOM FONT CLASSES ========== */
+.font-archivo {
+  font-family: 'Archivo', sans-serif;
+}
+
+.font-clash {
+  font-family: 'Clash Display', sans-serif;
+}
+
+.font-melodrama {
+  font-family: 'Melodrama', serif;
+}
+
+.font-boska {
+  font-family: 'Boska', serif;
+}
+
+.pp-neue-world-font {
+  font-family: "PP Neue World", sans-serif;
+}
+
+.instrument-serif {
+  font-family: var(--font-instrument-serif), serif;
+}
+
+/* ========== ANIMATIONS, HERO, NAV, ETC. ========== */
+/* (Copy-pasted from your second CSS, no functional changes) */
+.line {
+  overflow: hidden;
+  opacity: 0;
+}
+
+.line>* {
+  display: inline-block;
+}
+
+/* --- HACKWAVE HERO ANIMATION --- */
+.animated-text {
+  text-align: center;
+  max-width: 1000px;
+  color: #e3e3db;
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.text-segment {
+  display: inline;
+  opacity: 0;
+}
+
+.placeholder-icon {
+  margin: 5px 0.2em 0 0.2em;
+  width: 45px;
+  height: 45px;
+  display: inline-block;
+  vertical-align: middle;
+  will-change: transform;
+  visibility: hidden;
+}
+
+/* --- SIDEWORK STYLES --- */
+
+/* Text Reveal Animation Styles */
+.anime-text .word {
+  display: inline-block;
+  position: relative;
+  margin-right: 0.1rem;
+  margin-bottom: 0.1rem;
+  padding: 0.05rem 0.15rem;
+  border-radius: 2rem;
+  will-change: background-color, opacity;
+  opacity: 0;
+}
+
+.anime-text .word span {
+  position: relative;
+  opacity: 0;
+}
+
+.anime-text .word.keyword-wrapper {
+  margin: 0 0.01rem 0.01rem 0.01rem;
+}
+
+.anime-text .word span.keyword {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  border-radius: 2rem;
+  padding: 0.1rem 0;
+  color: #141414;
+  position: relative;
+  padding: 5px 10px;
+}
+
+.anime-text .word span.keyword.hackwave::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #ff6ec7;
+  border-radius: 2rem;
+  z-index: -1;
+}
+
+/* --- Updated Keyword Highlight Colors (Pastel Palette) --- */
+.anime-text .word span.keyword.brightest::before,
+.anime-text .word span.keyword.ship::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #a3e6a7;
+  /* darker mint from #c5ffc9 */
+  border-radius: 2rem;
+  z-index: -1;
+}
+
+.anime-text .word span.keyword.developers::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #a5cfff;
+  /* darker blue from #d1ecff */
+  border-radius: 2rem;
+  z-index: -1;
+}
+
+.anime-text .word span.keyword.builders::before,
+.anime-text .word span.keyword.breakthrough::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #feaac0;
+  /* pastel pink */
+  border-radius: 2rem;
+  z-index: -1;
+}
+
+.anime-text .word span.keyword.collaborative::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #a5baff;
+  /* darker lavender from #dcd0fe */
+  border-radius: 2rem;
+  z-index: -1;
+}
+
+.anime-text .word span.keyword.solutions::before,
+.anime-text .word span.keyword.leaders::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #f9ffa5;
+  /* pastel yellow */
+  border-radius: 2rem;
+  z-index: -1;
+}
+
+/* Remove or override any previous conflicting keyword color rules below this block */
+
+.anime-text .word span.keyword.innovation::before,
+.anime-text .word span.keyword.generation::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #4f8cff;
+  border-radius: 2rem;
+  z-index: -1;
+}
+
+@media (max-width: 1000px) {
+  .anime-text .word {
+    margin-right: 0.05rem;
+    margin-bottom: 0.05rem;
+    padding: 0.05rem 0.1rem;
+  }
+
+  .anime-text .word.keyword-wrapper {
+    margin: 0 0.1rem 0.05rem 0.05rem;
+  }
+}
+
+/* Navigation Styles */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  padding: 2em 3.5em;
+  display: flex;
+  justify-content: space-between;
+  z-index: 20;
+  mix-blend-mode: difference;
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.nav-logo {
+  color: #fcf2e8;
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+  flex-direction: row;
+  color: #fcf2e8;
+  font-weight: 500;
+  align-items: center;
+}
+
+.nav-link {
+  position: relative;
+  cursor: pointer;
+  mix-blend-mode: difference;
+  color: #fcf2e8;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.nav-link-underline {
+  position: absolute;
+  left: 0;
+  bottom: -0.25rem;
+  width: 100%;
+  height: 2px;
+  background-color: #fcf2e8;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+  transform-origin: left;
+}
+
+.nav-link:hover .nav-link-underline {
+  transform: scaleX(1);
+}
+
+.nav-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.nav-button {
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  background-color: transparent;
+  border: 1px solid #fcf2e8;
+  color: #fcf2e8;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.nav-button:hover {
+  background-color: #fcf2e8;
+  color: #141414;
+}
+
+/* Hero Section Styles */
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* p {
+  font-size: 1.5rem;
+  font-weight: 400;
+} */
+
+section {
+  position: relative;
+  width: 100svw;
+  height: 100svh;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #141414;
+  /* color: #fcf2e8; */
+  overflow: hidden;
+}
+
+.hero {
+  background-color: #fcf2e8;
+  color: #141414;
+  position: column;
+  transition: background-color 0.3s ease;
+}
+
+.hero-header {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  will-change: transform, opacity;
+}
+
+.animated-icons {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  will-change: transform;
+  z-index: 2;
+}
+
+.animated-icon {
+  flex: 1;
+  aspect-ratio: 1;
+  will-change: transform;
+}
+
+.animated-text {
+  position: relative;
+  max-width: 1000px;
+  text-align: center;
+  color: #e3e3db;
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  /* Increased from clamp(2rem, 5vw, 4rem) */
+  font-weight: 800;
+  line-height: 1;
+}
+
+.text-segment {
+  opacity: 0;
+}
+
+.placeholder-icon {
+  margin-top: -10px;
+  width: 80px;
+  /* Increased from 60px */
+  height: 80px;
+  /* Increased from 60px */
+  display: inline-block;
+  vertical-align: middle;
+  will-change: transform;
+  visibility: hidden;
+}
+
+.hackwave-img {
+  width: 60vw;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+.right-img {
+  width: 20vw;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+
+.keyword.clat {
+  background-color: #fda4af;
+  /* pink */
+  color: #000;
+  border-radius: 0.4em;
+  padding: 0.1em 0.3em;
+}
+
+.keyword.aspirants {
+  background-color: #93c5fd;
+  /* blue */
+  color: #000;
+  border-radius: 0.4em;
+  padding: 0.1em 0.3em;
+}
+
+.keyword.mock {
+  background-color: #bbf7d0;
+  /* green */
+  color: #000;
+  border-radius: 0.4em;
+  padding: 0.1em 0.3em;
+}
+
+.keyword.tests {
+  background-color: #fde68a;
+  /* yellow */
+  color: #000;
+  border-radius: 0.4em;
+  padding: 0.1em 0.3em;
+}
+
+.keyword.exam {
+  background-color: #a5f3fc;
+  /* cyan */
+  color: #000;
+  border-radius: 0.4em;
+  padding: 0.1em 0.3em;
+}
+
+.keyword.affordable {
+  background-color: #fbcfe8;
+  /* pink-light */
+  color: #000;
+  border-radius: 0.4em;
+  padding: 0.1em 0.3em;
+}
+
+.keyword.analyze {
+  background-color: #ddd6fe;
+  /* purple-light */
+  color: #000;
+  border-radius: 0.4em;
+  padding: 0.1em 0.3em;
+}
+
+.keyword.nlu {
+  background-color: #fca5a5;
+  /* red-light */
+  color: #000;
+  border-radius: 0.4em;
+  padding: 0.1em 0.3em;
+}
+
+/* Hero heading styles scoped to hero section only */
+.hero-heading {
+  position: relative;
+  max-width: 1000px;
+  text-align: center;
+  color: #e3e3db;
+  font-size: clamp(1.5rem, 3vw, 3rem);
+  /* Reduced from 5rem to 4rem for desktop */
+  font-weight: 800;
+  line-height: 1;
+}
+
+@media (max-width: 1000px) {
+  .hero-heading {
+    font-size: clamp(2rem, 5vw, 3rem);
+    /* Increased from clamp(1.5rem, 4vw, 2.5rem) */
+    max-width: 90vw;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .hero-heading {
+    font-size: clamp(1.5rem, 4.5vw, 3rem);
+    /* Increased from clamp(2rem, 4.5vw, 3.5rem) */
+    max-width: 95vw;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-heading {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    /* Increased from clamp(1.2rem, 3.5vw, 2rem) */
+    max-width: 95vw;
+  }
+}
+
+/* .animated-text can now be used for animation-specific styles only */
+/* .animated-text {
+  animation-specific styles here if needed
+} */
+
+@media (max-width: 1000px) {
+  .animated-text {
+    font-size: clamp(2rem, 5vw, 3rem);
+    /* Increased from clamp(1.5rem, 4vw, 2.5rem) */
+    max-width: 90vw;
+  }
+
+  p {
+    font-size: 1rem;
+  }
+
+  .hero-header {
+    top: 45%;
+    width: 100%;
+  }
+
+  .placeholder-icon {
+    margin: 6px 0.4em 0 0.4em;
+    width: 35px;
+    /* Reduced from 45px */
+    height: 35px;
+    /* Reduced from 45px */
+  }
+
+  .hackwave-img {
+    width: 60vw;
+  }
+
+  /* Mobile Navigation */
+  .navbar {
+    padding: 1em 1.5em;
+  }
+
+  .nav-links {
+    gap: 1.5rem;
+  }
+
+  .nav-logo {
+    font-size: 1.25rem;
+  }
+
+  .nav-button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Tablet specific styles */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .animated-text {
+    font-size: clamp(2.5rem, 5.5vw, 4rem);
+    /* Increased from clamp(2rem, 4.5vw, 3.5rem) */
+    max-width: 95vw;
+  }
+
+  .hackwave-img {
+    width: 50vw;
+  }
+
+  .placeholder-icon {
+    margin: 7px 0.45em 0 0.45em;
+    width: 45px;
+    /* Reduced from 60px */
+    height: 45px;
+    /* Reduced from 60px */
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .animated-text {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    /* Increased from clamp(1.2rem, 3.5vw, 2rem) */
+    max-width: 95vw;
+  }
+
+  .hackwave-img {
+    width: 70vw;
+  }
+
+  .placeholder-icon {
+    margin: 4px 0.3em 0 0.3em;
+    width: 25px;
+    /* Reduced from 35px */
+    height: 25px;
+    /* Reduced from 35px */
+  }
+
+  .hero-header {
+    top: 40%;
+    gap: 1.5rem;
+  }
+
+  .hero-header p {
+    font-size: 1rem;
+  }
+}
+
+
+#card-1 .info-card-inner {
+  color: #c5efff;
+}
+
+#card-2 .info-card-inner {
+  background-color: #dcd0fe;
+  /* pastel lavender */
+}
+
+#card-3 .info-card-inner {
+  background-color: #feaac0;
+  /* pastel pink */
+}
+
+#card-4 .info-card-inner {
+  background-color: #f9ffa5;
+  /* pastel yellow */
+}
+
+#card-5 .info-card-inner {
+
+  background-color: #d1ecff;
+  /* pastel blue */
+}
+
+#card-6 .info-card-inner {
+  background-color: #c5ffc9;
+  /* pastel mint */
+}
+
+/* Smooth scrolling for timeline and entire app */
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  scroll-behavior: smooth;
+}
+
+/* Timeline specific smooth scrolling improvements */
+.timeline-container {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Better scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+
+#marquee {
+  will-change: transform;
+}
+
+
+/* ... keep all .anime-text, .navbar, .hero, .animated-text,
+   media queries, timeline, scrollbar styles from your second CSS here ... */

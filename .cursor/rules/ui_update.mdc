@@ -1,0 +1,28 @@
+Build an admin UI for managing test questions where the question flow follows a fixed subject order:
+English → GK → Legal Reasoning → Logical Reasoning → Quantitative Techniques.
+
+Requirements:
+Question Entry Order – The admin adds all English questions first, then GK, then Legal Reasoning, and so on, in the given subject order.
+Subject Skipping – The admin can skip any subject entirely if no questions are to be added for it.
+Editing – The admin can edit or update any question at any time.
+Numbering Logic – Questions are numbered in increasing order regardless of subject. Example:
+
+English: Q1–Q10
+GK: Q11–Q13
+Legal Reasoning: No questions added
+Logical Reasoning: Q14–Q33
+Quantitative Techniques: No questions added
+
+UI Ideas:
+
+A top navigation bar showing all subjects in order, along with the range of question numbers for each subject (e.g., “English (1–10)”).
+
+Easy navigation between subjects.
+
+Option to add, view, or edit questions directly from the top nav.
+
+Clearly mark skipped subjects.
+
+Highlight the currently active subject section.
+
+Goal: Create an intuitive, responsive admin interface that allows easy question management while clearly reflecting the subject order and numbering.

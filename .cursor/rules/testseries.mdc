@@ -1,0 +1,13 @@
+# Test Series
+
+admin can start new testseries  - by entering   seris name  , type(daily , playlist) ,  ------- after creating  test series admin can add the active tests in list -------  basically just need to reference that test
+
+type daily means  if admin added new test to this list then it will appear on top
+
+type playlist means  admin will add the test will appear on bottom
+playlist will have the - rounded completion ui too - example 2/12 test completed
+
+if admin added new test to particular  then daily or playlist ui will show new tag  in it -
+
+
+users side - user can see the tests in list format just like /dashboard page

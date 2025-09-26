@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "app/api/tests/[id]/download/route.js": {
+      "maxDuration": 30
+    },
+    "app/api/lexia/tests/[id]/download/route.js": {
+      "maxDuration": 30
+    }
+  },
+  "env": {
+    "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD": "true"
+  }
+}

@@ -1,0 +1,240 @@
+---
+description: admin section complete funcanality
+globs:
+alwaysApply: false
+---
+
+# admin section /admin
+
+# admin can see all the users (paid , free , admin)  - make route /users
+- admin can set the user type if he wants and can save it
+like paid to free , or free to admin  anything  easily
+- admin can see profile photo , name , email , role , save , block(blocked user cant access the website from that particular id  if possible make this feature  )
+
+
+# admin can create test - /create_test
+
+- admin see the previously created test in this page and can modify the test too and save them
+
+- admin can delete test too
+
+- admin can create new test from here
+fields to take initially while creating test (test thumbnail ,test type free , paid  , test name , test descriptioin points maximum 4 points allowed  like - best test series , includes 200+ questions and many more )
+
+- after creating this test meta description card layout admin can add questions to this test
+
+per question contains
+
+test id
+question id
+question number 1 , 2 , 3 etc must be incremental
+question
+is image {url } allow 1 or more images
+is comprehension true false
+if true then allow comprehension  - its gonna be detailed input field can contail a lot of description
+
+is table true or false
+if true then
+table rows columns [a1b1, a1b2, a2b1, a2b2] we can add as much rows and columns we want we will show them like table in fronted
+
+
+
+type - options or input
+if option then is multicorrect or single correct
+if options then number of options in array  default 4 - option can include all type of characters in particular option
+
+if input then can include all type of characters too but this will be a single input field
+
+test positive marks +1 default and can be changed in future by admin
+test negative markd -0.25 default and can be changed in future by admin
+
+admin can mark the correct answer too [single correct , multicorrect or input data depending on what admin set on this particular question]
+
+this was all about admin pov
+
+but if user pov then this will include some more fields
+time taken on question
+what user marked single correct , multicorrect or input data depending on what admin set on this particular question
+
+user can do report on question too  default null
+
+<!--  use this data -->
+
+
+
+
+✅ NEW & UPDATED SCHEMA PLAN (Full Breakdown)
+🔹 Test model (🛠️ Admin POV)
+Add fields:
+
+thumbnailUrl: image for test card
+
+highlightPoints: string array, max 4
+
+durationInMinutes: test duration in minutes (e.g. 180 = 3hr)
+
+positiveMarks, negativeMarks: defaults to 1, -0.25
+
+prisma
+Copy
+Edit
+model Test {
+  id               String     @id @default(auto()) @map("_id") @db.ObjectId
+  title            String
+  description      String?
+  type             TestType
+  thumbnailUrl     String?
+  highlightPoints  String[]   // Max 4 bullet points
+  durationInMinutes Int       // Example: 180 for 3hr
+  positiveMarks    Float      @default(1.0)
+  negativeMarks    Float      @default(-0.25)
+  isActive         Boolean    @default(true)
+  questions        Question[]
+  testAttempts     TestAttempt[]
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+}
+🔹 Question model (🛠️ Admin POV)
+Update to support:
+
+image URLs (multiple)
+
+comprehension text
+
+table (row/col)
+
+question type (enum): options or input
+
+option type: single or multi correct
+
+correct answer: string[] or string depending on type
+
+section: enum
+
+question number
+
+prisma
+Copy
+Edit
+enum QuestionType {
+  OPTIONS
+  INPUT
+}
+
+enum OptionType {
+  SINGLE
+  MULTI
+}
+
+enum SectionType {
+  ENGLISH
+  GK_CA
+  LEGAL_REASONING
+  LOGICAL_REASONING
+  QUANTITATIVE_TECHNIQUES
+}
+
+model Question {
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId
+  testId          String         @db.ObjectId
+  test            Test           @relation(fields: [testId], references: [id], onDelete: Cascade)
+
+  questionNumber  Int            // Auto-increment per test
+  questionText    String
+  imageUrls       String[]       // Multiple image URLs
+  isComprehension Boolean        @default(false)
+  comprehension   String?
+
+  isTable         Boolean        @default(false)
+  tableData       String[][]?    // Represent table like [["a1b1", "a1b2"], ["a2b1", "a2b2"]]
+
+  questionType    QuestionType
+  optionType      OptionType?    // Only if questionType is OPTIONS
+  options         String[]?      // Up to 4-6 options with all characters
+
+  inputAnswer     String?        // Only if questionType is INPUT
+  correctAnswers  String[]       // For both input or options, depending on type
+
+  positiveMarks   Float          @default(1.0)
+  negativeMarks   Float          @default(-0.25)
+
+  section         SectionType
+  explanation     String?
+
+  answers         Answer[]
+}
+🔹 Answer model (👤 User POV)
+To support:
+
+actual selected answers (string/string[])
+
+time taken per question
+
+report if submitted
+
+prisma
+Copy
+Edit
+model Answer {
+  id             String      @id @default(auto()) @map("_id") @db.ObjectId
+  questionId     String      @db.ObjectId
+  testAttemptId  String      @db.ObjectId
+  question       Question    @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  testAttempt    TestAttempt @relation(fields: [testAttemptId], references: [id], onDelete: Cascade)
+
+  selectedOption String[]    // Single or multiple selected values
+  isCorrect      Boolean?
+  timeTakenSec   Int         // Time spent on this question
+  report         String?     // Optional report from user
+}
+🔹 TestAttempt model (👤 User POV)
+To support:
+
+multiple re-attempts
+
+submitted or not
+
+total score
+
+total attempted questions
+
+total time taken
+
+prisma
+Copy
+Edit
+model TestAttempt {
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String      @db.ObjectId
+  testId       String      @db.ObjectId
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  test         Test        @relation(fields: [testId], references: [id], onDelete: Cascade)
+  answers      Answer[]
+  score        Float?
+  completed    Boolean     @default(false)
+  totalTimeSec Int?        // Total time spent
+  totalAttempted Int?      // How many questions attempted
+  startedAt    DateTime    @default(now())
+  completedAt  DateTime?
+}
+📌 Key Notes
+✅ Re-attempts: You allow multiple TestAttempt entries per (userId + testId)
+
+✅ Question numbers: Auto-increment within a test — enforce in logic, not schema.
+
+✅ Answers & Scoring: Depends on comparing selectedOption[] with correctAnswers[]
+
+✅ Admin-Only Routes: Make /create_test, /add_questions etc., protected via role === ADMIN
+
+✅ API/Frontend Todo Summary
+Feature	API/Frontend Requirement
+Create Test	Form with thumbnail, type, name, desc, points[], duration
+Add Question	Rich form with conditionally visible inputs (e.g., comprehension, table, options/input)
+Edit/Delete Test	Card layout with "Edit" & "Delete" buttons
+Attempt Test (User)	Timer, question tracker, input recorder
+Reattempt	Simply create a new TestAttempt
+Report Question	User can submit string, stored in Answer.report
+
+
+
+

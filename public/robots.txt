@@ -1,0 +1,8 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+
+# Sitemap location (replace with your actual sitemap URLs)
+Sitemap: https://outlawed.in/sitemap.xml
+

@@ -1,0 +1,21 @@
+Analysis Results -
+
+1. after the test is analyzed  and when we see the results    give option of manual editing -
+-  in  Passage  - give option of rich text applier ai we can manually click on the button on side enhance the passage text - after clicking it the ai will see that one particular passage and exactly copy it but this time apply the better text readibility  spaces , paragraph, bold , text size , and many morem change and highlighted words and all  - ai must be able to auto analyze the required things and apply based on that particular passage so students can read it and have better experience
+
+- in passage in tables - give me option to edit, delete and add the table  in analyzed text
+- in passage add one more option to add the image and remove image  to particular passage
+
+
+
+
+
+
+
+ you can make the ui like in side of everypassage show 3 tools enhance button , table edit button , and add image button
+at the end give admin a nice editing experience
+
+ - make sure import button must import all the edited things too - are you understood
+ - use gemini api flash same ai which we use in aitexanalyzer
+ - read prisma schema before editin
+ - read the import route funcanality

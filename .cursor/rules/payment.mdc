@@ -1,0 +1,12 @@
+if user is free - then he can see all the plans  which admin added
+
+if user purchased any plan then show the exact date and time  his pro plan gonna end
+
+pro users can extend their pro plan time by purchasing more plan
+give ui of plans to pro user too to extend their existing plan
+
+apply razorpay ui correctly
+
+the api and db are already configured  as you can see
+
+YOur task is to make the ui for this page 

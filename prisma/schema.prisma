@@ -1,0 +1,420 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  FREE
+  PAID
+  ADMIN
+}
+
+enum TestType {
+  FREE
+  PAID
+}
+
+enum QuestionType {
+  OPTIONS
+  INPUT
+}
+
+enum OptionType {
+  SINGLE
+  MULTI
+}
+
+enum SectionType {
+  ENGLISH
+  GK_CA
+  LEGAL_REASONING
+  LOGICAL_REASONING
+  QUANTITATIVE_TECHNIQUES
+}
+
+enum NotificationType {
+  TEST_ACTIVATION
+  ADMIN_BROADCAST
+  PAYMENT_SUCCESS
+  PLAN_EXPIRY
+}
+
+enum TestSeriesType {
+  DAILY
+  PLAYLIST
+}
+
+enum LexiaTestType {
+  MOCK
+  SECTIONAL
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  role          UserRole  @default(FREE)
+  paidUntil     DateTime?
+  isBlocked     Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts Account[]
+  sessions Session[]
+  testAttempts TestAttempt[]
+  notifications Notification[]
+  payments Payment[]
+  broadcastNotificationsRead BroadcastNotificationRead[]
+  reviews Review[]
+  notificationLikes NotificationLike[]
+  testSeries UsersOnTestSeries[]
+  lexiaTests        LexiaTest[]
+  lexiaTestAttempts LexiaTestAttempt[]
+  schedules         PersonalizedSchedule[]
+}
+
+model VerificationToken {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Test {
+  id               String     @id @default(auto()) @map("_id") @db.ObjectId
+  title            String
+  keyTopic         String?    // Key topic for filtering
+  type             TestType
+  durationInMinutes Int       // Example: 180 for 3hr
+  isActive         Boolean    @default(true)
+  passages         Passage[]  // Test can have multiple passages
+  questions        Question[]
+  testAttempts     TestAttempt[]
+  series           TestsOnTestSeries[]
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+}
+
+model Passage {
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId
+  testId          String         @db.ObjectId
+  test            Test           @relation(fields: [testId], references: [id], onDelete: Cascade)
+
+  passageNumber   Int            // Passage number within the test (1, 2, 3, etc.)
+  content         String         // The actual passage content
+  contentFormat   Json?          // Rich text formatting for passage content
+  section         SectionType    // Which section this passage belongs to
+
+  // Image fields
+  hasImage        Boolean        @default(false) // Whether this passage contains images
+  imageUrls       String[]       // Multiple image URLs for the passage
+
+  // Table data fields
+  isTable         Boolean        @default(false) // Whether this passage contains tabular data
+  tableData       Json?          // Table data as 2D array [["row1col1", "row1col2"], ["row2col1", "row2col2"]]
+
+  questions       Question[]     // Questions that reference this passage
+
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  // @@unique([testId, passageNumber]) // Temporarily commented out due to existing duplicate data
+}
+
+model Question {
+  id              String         @id @default(auto()) @map("_id") @db.ObjectId
+  testId          String         @db.ObjectId
+  test            Test           @relation(fields: [testId], references: [id], onDelete: Cascade)
+
+  passageId       String?        @db.ObjectId  // Reference to passage (null if standalone question)
+  passage         Passage?       @relation(fields: [passageId], references: [id], onDelete: Cascade)
+
+  questionNumber  Int            // Auto-increment per test
+  questionText    String
+  questionTextFormat Json?      // Store formatting data for questionText text
+  imageUrls       String[]       // Multiple image URLs
+
+  isTable         Boolean        @default(false)
+  tableData       Json?          // Represent table like [["a1b1", "a1b2"], ["a2b1", "a2b2"]]
+
+  questionType    QuestionType
+  optionType      OptionType?    // Only if questionType is OPTIONS
+  options         String[]       // Up to 4-6 options with all characters
+
+  inputAnswer     String?        // Only if questionType is INPUT
+  correctAnswers  String[]       // For both input or options, depending on type
+
+  positiveMarks   Float          @default(1.0)
+  negativeMarks   Float          @default(-0.25)
+
+  section         SectionType
+  explanation     String?
+  explanationFormat Json?      // Store formatting data for explanation text
+
+  answers         Answer[]
+}
+
+model TestAttempt {
+  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String      @db.ObjectId
+  testId       String      @db.ObjectId
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  test         Test        @relation(fields: [testId], references: [id], onDelete: Cascade)
+  answers      Answer[]
+  score        Float?
+  percentage   Float?      // Score as percentage (0-100)
+  totalQuestions Int?      // Total questions in the test
+  correctAnswers Int?      // Number of correct answers
+  wrongAnswers  Int?       // Number of wrong answers
+  unattempted   Int?       // Number of unattempted questions
+  completed    Boolean     @default(false)
+  totalTimeSec Int?        // Total time spent
+  totalAttempted Int?      // How many questions attempted
+  startedAt    DateTime    @default(now())
+  completedAt  DateTime?
+
+  // New fields for reattempt management
+  attemptNumber Int         @default(1)  // 1st, 2nd, 3rd attempt etc.
+  isLatest     Boolean     @default(true) // Only the latest attempt is marked as latest
+  previousAttemptId String? @db.ObjectId  // Link to previous attempt for comparison
+
+  // @@unique([userId, testId, attemptNumber]) // Temporarily commented out due to existing duplicate data
+  @@index([userId, testId, isLatest])
+}
+
+model Answer {
+  id             String      @id @default(auto()) @map("_id") @db.ObjectId
+  questionId     String      @db.ObjectId
+  testAttemptId  String      @db.ObjectId
+  question       Question    @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  testAttempt    TestAttempt @relation(fields: [testAttemptId], references: [id], onDelete: Cascade)
+
+  selectedOption String[]    // Single or multiple selected values
+  isCorrect      Boolean?
+  timeTakenSec   Int         // Time spent on this question
+  report         String?     // Optional report from user
+  marksObtained  Float?      // Marks obtained for this question (positive or negative)
+}
+
+model PaymentPlan {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  price         Float
+  duration      Int      // in days
+  durationType  String   @default("days") // days, months, years, until_date
+  untilDate     DateTime? // Only if durationType is until_date
+  description   String?
+  discount      Float?   // Discount percentage (0-100)
+  isActive      Boolean  @default(true)
+  payments      Payment[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Payment {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId        String      @db.ObjectId
+  planId        String      @db.ObjectId
+  amount        Float
+  razorpayPaymentId String?
+  status        String      // PENDING, SUCCESS, FAILED
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  plan          PaymentPlan @relation(fields: [planId], references: [id])
+  user          User        @relation(fields: [userId], references: [id])
+}
+
+model Notification {
+  id          String           @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String?          @db.ObjectId // null for broadcast notifications
+  title       String
+  message     String
+  type        NotificationType
+  thumbnailUrl String?
+  buttonText  String?
+  buttonLink  String?
+  isRead      Boolean          @default(false)
+  isBroadcast Boolean          @default(false) // true for admin broadcast notifications
+  createdAt   DateTime         @default(now())
+  user        User?            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Track which users have read this broadcast notification
+  readByUsers BroadcastNotificationRead[]
+
+  // Fields for Like feature
+  likeCount   Int                @default(0)
+  likes       NotificationLike[]
+}
+
+// New model to track which users have read which broadcast notifications
+model BroadcastNotificationRead {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  userId         String       @db.ObjectId
+  notificationId String       @db.ObjectId
+  readAt         DateTime     @default(now())
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notification Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, notificationId])
+}
+
+// Model to track likes on notifications
+model NotificationLike {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  userId         String       @db.ObjectId
+  notificationId String       @db.ObjectId
+  createdAt      DateTime     @default(now())
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  notification   Notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, notificationId])
+}
+
+model TestSeries {
+  id          String              @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  type        TestSeriesType      @default(DAILY)
+  isPublished Boolean             @default(false)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  tests       TestsOnTestSeries[]
+  users       UsersOnTestSeries[]
+}
+
+model TestsOnTestSeries {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  test         Test       @relation(fields: [testId], references: [id], onDelete: Cascade)
+  testId       String     @db.ObjectId
+  testSeries   TestSeries @relation(fields: [testSeriesId], references: [id], onDelete: Cascade)
+  testSeriesId String     @db.ObjectId
+  addedAt      DateTime   @default(now())
+
+  @@unique([testId, testSeriesId])
+}
+
+model UsersOnTestSeries {
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String     @db.ObjectId
+  testSeries   TestSeries @relation(fields: [testSeriesId], references: [id], onDelete: Cascade)
+  testSeriesId String     @db.ObjectId
+  completedAt  DateTime?
+  progress     Float      @default(0)
+
+  @@unique([userId, testSeriesId])
+}
+
+model Review {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @db.ObjectId
+  rating      Int      // 1-5 stars (required)
+  description String?  // Optional description
+  isRead      Boolean  @default(false) // Admin has read this review
+  adminReply  String?  // Admin's reply to the review
+  repliedAt   DateTime? // When admin replied
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model LexiaTest {
+  id                String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String        @db.ObjectId
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title             String
+  type              LexiaTestType
+  section           SectionType?
+  questionIds       String[]      @db.ObjectId
+  passageIds        String[]      @db.ObjectId
+  durationInMinutes Int
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  attempts LexiaTestAttempt[]
+
+  @@index([userId])
+}
+
+model LexiaTestAttempt {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String    @db.ObjectId
+  lexiaTestId  String    @db.ObjectId
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lexiaTest    LexiaTest @relation(fields: [lexiaTestId], references: [id], onDelete: Cascade)
+
+  answers           Json // { "questionId": ["answer"], ... }
+  score             Float?
+  percentage        Float?
+  totalQuestions    Int?
+  correctAnswers    Int?
+  wrongAnswers      Int?
+  unattempted       Int?
+  completed         Boolean   @default(false)
+  totalTimeSec      Int?
+  totalAttempted    Int?
+  startedAt         DateTime  @default(now())
+  completedAt       DateTime?
+  attemptNumber     Int       @default(1)
+  isLatest          Boolean   @default(true)
+  previousAttemptId String?   @db.ObjectId
+  questionTimes     Json? // { "questionId": timeInSeconds, ... }
+  @@index([userId, lexiaTestId, isLatest])
+}
+
+model PersonalizedSchedule {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String   @db.ObjectId
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  weekStartDate   DateTime
+  scheduleData    Json
+  insights        Json
+  recommendations Json
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([userId, weekStartDate])
+}
