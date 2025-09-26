@@ -143,6 +143,12 @@ export default function Sidebar({
           href: '/dashboard/lexia',
           icon: Sparkles,
           badge: 'New',
+      },
+        {
+          name: 'Law Buddy',
+          href: '/dashboard/law-buddy',
+          icon: MessageSquare,
+          badge: null,
         },
         {
           name: 'Leaderboard',
@@ -154,7 +160,7 @@ export default function Sidebar({
           name: 'Scheduler',
           href: '/dashboard/schedule',
           icon: Calendar,
-          badge: 'New',
+          badge: null,
         },
         // {
         //   name: 'Subscription',
@@ -162,18 +168,18 @@ export default function Sidebar({
         //   icon: CreditCard,
         //   badge: null,
         // },
-        {
-          name: 'Notifications',
-          href: '/dashboard/notifications',
-          icon: Bell,
-          badge: null,
-        },
-        {
-          name: 'Profile',
-          href: '/dashboard/profile',
-          icon: User,
-          badge: null,
-        },
+        // {
+        //   name: 'Notifications',
+        //   href: '/dashboard/notifications',
+        //   icon: Bell,
+        //   badge: null,
+        // },
+        // {
+        //   name: 'Profile',
+        //   href: '/dashboard/profile',
+        //   icon: User,
+        //   badge: null,
+        // },
       ]
 
   const isActive = (href) => pathname === href

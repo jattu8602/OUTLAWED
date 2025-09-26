@@ -110,6 +110,7 @@ model User {
   lexiaTests        LexiaTest[]
   lexiaTestAttempts LexiaTestAttempt[]
   schedules         PersonalizedSchedule[]
+  lawBuddyChats     LawBuddyChat[]
 }
 
 model VerificationToken {
@@ -132,6 +133,7 @@ model Test {
   questions        Question[]
   testAttempts     TestAttempt[]
   series           TestsOnTestSeries[]
+  lawBuddyChats    LawBuddyChat[]
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
 }
@@ -417,4 +419,18 @@ model PersonalizedSchedule {
   updatedAt       DateTime @updatedAt
 
   @@unique([userId, weekStartDate])
+}
+
+model LawBuddyChat {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String   @db.ObjectId
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title           String
+  messages        Json     // Array of message objects with role, content, timestamp
+  referenceTestId String?  @db.ObjectId
+  referenceTest   Test?    @relation(fields: [referenceTestId], references: [id], onDelete: SetNull)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId])
 }
