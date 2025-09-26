@@ -217,21 +217,21 @@ export default function SchedulePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white relative overflow-hidden">
+      <div className="min-h-screen bg-white relative overflow-hidden dark:bg-slate-950">
         {/* Background Gradient Blobs */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="relative top-10 left-10 w-72 h-72 bg-gradient-to-br from-pink-200 to-purple-200 rounded-full  opacity-10 " />
-          <div className="absolute top-40 right-20 w-96 h-96 bg-gradient-to-br from-blue-200 to-cyan-200 rounded-full blur-3xl opacity-25 animate-pulse" style={{ animationDelay: '1s' }} />
-          <div className="absolute bottom-20 left-1/4 w-80 h-80 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '2s' }} />
-          <div className="absolute bottom-40 right-1/3 w-64 h-64 bg-gradient-to-br from-cyan-200 to-blue-200 rounded-full blur-3xl opacity-30 animate-pulse" style={{ animationDelay: '3s' }} />
+        <div className="absolute inset-0 overflow-hidden pointer-events-none dark:bg-slate-950">
+          <div className="relative top-10 left-10 w-72 h-72 bg-gradient-to-br from-pink-200 to-purple-200 rounded-full  opacity-10 dark:bg-slate-950" />
+          <div className="absolute top-40 right-20 w-96 h-96 bg-gradient-to-br from-blue-200 to-cyan-200 rounded-full blur-3xl opacity-25 animate-pulse dark:bg-slate-950" style={{ animationDelay: '1s' }} />
+          <div className="absolute bottom-20 left-1/4 w-80 h-80 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full blur-3xl opacity-20 animate-pulse dark:bg-slate-950" style={{ animationDelay: '2s' }} />
+          <div className="absolute bottom-40 right-1/3 w-64 h-64 bg-gradient-to-br from-cyan-200 to-blue-200 rounded-full blur-3xl opacity-30 animate-pulse dark:bg-slate-950" style={{ animationDelay: '3s' }} />
         </div>
-        
-        <div className="relative z-10 mx-auto max-w-7xl p-4 sm:p-6 lg:p-8 space-y-8">
-          <div className="text-center space-y-4">
-            <div className="h-12 bg-gray-200 rounded w-96 mx-auto animate-pulse"></div>
-            <div className="h-6 bg-gray-200 rounded w-64 mx-auto animate-pulse"></div>
+
+        <div className="relative z-10 mx-auto max-w-7xl p-4 sm:p-6 lg:p-8 space-y-8 dark:bg-slate-950">
+          <div className="text-center space-y-4 ">
+            <div className="h-12 bg-gray-200 rounded w-96 mx-auto animate-pulse dark:bg-slate-950"></div>
+            <div className="h-6 bg-gray-200 rounded w-64 mx-auto animate-pulse dark:bg-slate-950"></div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 dark:bg-slate-950">
             {[...Array(7)].map((_, i) => (
               <div key={i} className="rounded-2xl shadow-lg bg-gray-100 animate-pulse h-80"></div>
             ))}
@@ -251,14 +251,14 @@ export default function SchedulePage() {
           <div className="absolute bottom-20 left-1/4 w-80 h-80 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '2s' }} />
           <div className="absolute bottom-40 right-1/3 w-64 h-64 bg-gradient-to-br from-cyan-200 to-blue-200 rounded-full blur-3xl opacity-30 animate-pulse" style={{ animationDelay: '3s' }} />
         </div>
-        
+
         <div className="relative z-10 mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
           <div className="text-center space-y-6">
             <AlertCircle className="h-16 w-16 mx-auto text-red-500" />
             <h1 className="text-2xl font-bold text-gray-900">Something went wrong</h1>
             <p className="text-red-600 font-medium">{error}</p>
-            <Button 
-              onClick={() => fetchSchedule(true)} 
+            <Button
+              onClick={() => fetchSchedule(true)}
               className="px-6 py-3 rounded-lg border border-gray-300 hover:bg-gray-100 transition-all duration-200 font-medium"
             >
               Try Again
@@ -279,7 +279,7 @@ export default function SchedulePage() {
           <div className="absolute bottom-20 left-1/4 w-80 h-80 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '2s' }} />
           <div className="absolute bottom-40 right-1/3 w-64 h-64 bg-gradient-to-br from-cyan-200 to-blue-200 rounded-full blur-3xl opacity-30 animate-pulse" style={{ animationDelay: '3s' }} />
         </div>
-        
+
         <div className="relative z-10 mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
           <div className="text-center space-y-6">
             <Brain className="h-16 w-16 mx-auto text-gray-400" />
@@ -292,7 +292,7 @@ export default function SchedulePage() {
   }
 
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden">
+    <div className="min-h-screen bg-white relative overflow-hidden dark:bg-slate-950">
       {/* Background Gradient Blobs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-pink-200 to-purple-200 rounded-full blur-3xl opacity-30 animate-pulse" />
@@ -300,20 +300,15 @@ export default function SchedulePage() {
         <div className="absolute bottom-20 left-1/4 w-80 h-80 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '2s' }} />
         <div className="absolute bottom-40 right-1/3 w-64 h-64 bg-gradient-to-br from-cyan-200 to-blue-200 rounded-full blur-3xl opacity-30 animate-pulse" style={{ animationDelay: '3s' }} />
       </div>
-      
+
       <div className="relative z-10 mx-auto max-w-7xl p-4 sm:p-6 lg:p-8 space-y-8">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center space-y-4"
-        >
+        <div>
           <div className="space-y-2">
-            <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 tracking-tight">
+            <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 tracking-tight dark:text-white">
               Your 7-Day Study Plan
             </h1>
-            <p className="text-lg text-gray-600 font-medium">
+            <p className="text-lg text-gray-600 font-medium dark:text-gray-400">
               {getCurrentDate()}
             </p>
           </div>
@@ -322,7 +317,7 @@ export default function SchedulePage() {
             <Button
               onClick={handleGenerateSchedule}
               disabled={generating}
-              className="flex items-center gap-2 px-6 py-3 rounded-lg border border-gray-300 hover:bg-gray-100 transition-all duration-200 font-medium"
+              className="flex items-center gap-2 px-6 py-3 rounded-lg border border-gray-300 hover:bg-gray-100 transition-all duration-200 font-medium dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-white"
             >
               {generating ? (
                 <RotateCcw className="w-4 h-4 animate-spin" />
@@ -332,7 +327,7 @@ export default function SchedulePage() {
               {generating ? 'Generating...' : 'Generate New Schedule'}
             </Button>
           </div>
-        </motion.div>
+        </div>
 
         {/* Loading and Error States */}
         <AnimatePresence>
@@ -353,11 +348,7 @@ export default function SchedulePage() {
           <>
             {/* No Analytics State */}
             {!scheduleData.hasAnalytics && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
-              >
+              <div>
                 <Card className="border-amber-200 bg-amber-50 dark:bg-amber-900/20">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-amber-800 dark:text-amber-200">
@@ -421,7 +412,7 @@ export default function SchedulePage() {
                     </div>
                   </CardContent>
                 </Card>
-              </motion.div>
+              </div>
             )}
 
             {/* Weekly Schedule */}
@@ -504,12 +495,7 @@ export default function SchedulePage() {
                 </motion.div> */}
 
                 {/* Weekly Schedule Grid */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
-                  className="space-y-8"
-                >
+                <div>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {(
                       scheduleData.weeklySchedule ||
@@ -564,19 +550,19 @@ export default function SchedulePage() {
                       )
                     })}
                   </div>
-                </motion.div>
+                </div>
               </>
             )}
 
             {/* Today's Test Analytics Section */}
-            <AnimatePresence>
+       
               {isAnalyticsLoading && (
                 <motion.div exit={{ opacity: 0 }}>
                   {/* Analytics Skeleton */}
                 </motion.div>
               )}
               {todaysTestAnalytics && (
-                <motion.div
+                <div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
@@ -626,9 +612,9 @@ export default function SchedulePage() {
                       </div>
                     </CardContent>
                   </Card>
-                </motion.div>
+                </div>
               )}
-            </AnimatePresence>
+
           </>
         )}
       </div>
