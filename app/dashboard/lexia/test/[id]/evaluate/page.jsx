@@ -61,6 +61,7 @@ export default function TestEvaluationPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [sidebarCollapsed, setSidebarCollapsed] = useState(true)
   const [showAttemptHistory, setShowAttemptHistory] = useState(false)
+  const [analysisCache, setAnalysisCache] = useState({})
 
   // Get current question
   const currentQuestion = evaluationData?.questions?.[currentQuestionIndex]
@@ -294,6 +295,11 @@ export default function TestEvaluationPage() {
           setSidebarCollapsed={setSidebarCollapsed}
         />
         <QuestionDisplay
+          testId={testId}
+          attemptId={attemptId}
+          isProUser={
+            session?.user?.role === 'PRO' || session?.user?.role === 'ADMIN'
+          }
           currentQuestion={currentQuestion}
           questions={questions}
           passages={passages}
@@ -304,6 +310,8 @@ export default function TestEvaluationPage() {
           handlePreviousQuestion={handlePreviousQuestion}
           handleNextQuestion={handleNextQuestion}
           handleQuestionNavigation={handleQuestionNavigation}
+          analysisCache={analysisCache}
+          setAnalysisCache={setAnalysisCache}
         />
         <QuestionNavigationSidebar
           groupedQuestions={groupedQuestions}

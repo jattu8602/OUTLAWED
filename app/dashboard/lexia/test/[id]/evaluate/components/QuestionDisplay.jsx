@@ -2,6 +2,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Button } from '@/components/ui/button'
+import DetailedAnalysis from './DetailedAnalysis'
 import {
   BookOpen,
   ChevronLeft,
@@ -60,6 +61,9 @@ const isValidTableData = (tableData) => {
 }
 
 export default function QuestionDisplay({
+  testId,
+  attemptId,
+  isProUser,
   currentQuestion,
   questions,
   passages = [],
@@ -70,6 +74,8 @@ export default function QuestionDisplay({
   handlePreviousQuestion,
   handleNextQuestion,
   handleQuestionNavigation,
+  analysisCache,
+  setAnalysisCache,
 }) {
   // Helper function to get passage for a question
   const getPassageForQuestion = (question) => {
@@ -453,6 +459,15 @@ export default function QuestionDisplay({
                   />
                 </div>
               )}
+
+              <DetailedAnalysis
+                testId={testId}
+                attemptId={attemptId}
+                questionId={currentQuestion.id}
+                isProUser={isProUser}
+                analysisCache={analysisCache}
+                setAnalysisCache={setAnalysisCache}
+              />
 
               {/* Navigation Buttons */}
               <div className="flex flex-col sm:flex-row items-center justify-between pt-4 sm:pt-6 border-t border-slate-200 dark:border-slate-700 mt-4 sm:mt-6 gap-4">

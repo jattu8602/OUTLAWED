@@ -68,7 +68,7 @@ model Question {
 
 ### 1. Comprehension Text Example:
 
-```html
+
 <p><strong>Passage:</strong></p>
 <p>
   Article 14 of the Indian Constitution guarantees equality before law and equal
@@ -135,7 +135,7 @@ const handleInputChange = (field, value) => {
   }
   // ... other fields
 }
-```
+
 
 ### 3. Display in Student Interface:
 
