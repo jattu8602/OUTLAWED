@@ -151,6 +151,13 @@ export default function Sidebar({
           badge: null,
         },
         {
+          name: 'Saras',
+          href: '/dashboard/studybuddy',
+          icon: MessageSquare,
+          badge: null,
+
+        },
+        {
           name: 'Leaderboard',
           href: '/dashboard/leaderboard',
           icon: Trophy,

@@ -1,0 +1,91 @@
+Core Features (Existing + New Additions)
+
+AI Chatbot Interface:
+
+Functions like a personal tutor, providing explanations, examples, quizzes, and summaries.
+
+Supports voice input/output for hands-free learning.
+
+UI Idea: Split layout: Chat on the left, sidebar on the right with study stats, Pomodoro, and quick actions.
+
+Personalized Learning:
+
+Users input weak topics. AI generates targeted content: exercises, concept maps, flashcards, and mini-quizzes.
+
+Adaptive learning: AI tracks performance over time and adjusts difficulty.
+
+New: Users can set learning goals (e.g., “Finish Algebra section in 1 week”), and AI will create a roadmap.
+
+Pomodoro Timer:
+
+25-min study / 5-min break with progress tracking and badge rewards.
+
+New: Daily streaks, with small rewards for consecutive days of focus.
+
+New UI: Animated circular timer with color gradient, subtle background pulse during focus mode, and badge notifications.
+
+Focus Tracking:
+
+Tab-switch detection resets Pomodoro progress.
+
+New: Optional eye-tracking integration (via webcam) to detect if user is attentive or distracted.
+
+Study Reminders & Tips:
+
+2-hour notifications for breaks and study tips.
+
+New: AI can suggest micro-break activities, e.g., stretching exercises, deep breathing, or brain teasers.
+
+Gamification & Motivation:
+
+Badge system for Pomodoro completion.
+
+New: Level system where completing lessons and streaks increase rank, unlocking new achievements.
+
+New: Leaderboard (optional) to compare progress with friends or classmates.
+
+Performance Analytics:
+
+Tracks completed Pomodoro sessions, quiz scores, and weak areas.
+
+Visual dashboards showing progress over time.
+
+UI Idea: Minimalistic bar charts, heatmaps, and circular progress indicators.
+
+Resource Hub:
+
+Curated study material: PDFs, videos, flashcards.
+
+New: AI can summarize long notes or textbooks into digestible highlights.
+
+Users can save and tag content for quick revision later.
+
+Adaptive Quiz Generator:
+
+After studying a topic, AI generates a mini-quiz to test understanding.
+
+New: Quiz difficulty adapts based on past answers; explanations provided for wrong answers.
+
+Dark Mode & Customization:
+
+Users can switch between light/dark themes, adjust font size, and choose background gradients or wallpapers.
+
+New: Customizable sound notifications for Pomodoro start/end and reminders.
+
+Offline Mode (Optional):
+
+AI-generated content and saved notes accessible offline.
+
+Unique Selling Points (Enhanced)
+
+Hyper-Personalized Learning: Adapts to weak areas, goals, and performance trends.
+
+Gamified & Motivating: Pomodoro badges, daily streaks, levels, and leaderboard for engagement.
+
+Focus-Enforcing: Tab detection, optional eye-tracking, and streak-based rewards encourage discipline.
+
+AI-Powered Study Tools: Summaries, quizzes, flashcards, and curated content for efficient learning.
+
+Health-Conscious: Regular breaks, micro-exercises, and wellness tips improve mental and physical health.
+
+Visual & Interactive UI: Minimalist, clean interface with progress bars, dashboards, and subtle animations for motivation.
