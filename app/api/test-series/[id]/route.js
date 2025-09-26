@@ -27,6 +27,11 @@ export async function GET(req, { params }) {
           include: {
             test: {
               include: {
+                questions: {
+                  select: {
+                    positiveMarks: true,
+                  },
+                },
                 testAttempts: {
                   where: { userId: session.user.id },
                   orderBy: {
@@ -50,16 +55,27 @@ export async function GET(req, { params }) {
     // Attach user's attempt history to each test
     const seriesWithAttemptData = {
       ...testSeries,
-      tests: testSeries.tests.map((ts) => ({
-        ...ts.test,
-        isAttempted: ts.test.testAttempts.length > 0,
-        attemptCount: ts.test.testAttempts.length,
-        lastScore:
-          ts.test.testAttempts.length > 0
-            ? ts.test.testAttempts[0].percentage
-            : null,
-        attemptHistory: ts.test.testAttempts,
-      })),
+      tests: testSeries.tests.map((ts) => {
+        const totalMarks = ts.test.questions.reduce(
+          (sum, q) => sum + (q.positiveMarks || 1),
+          0
+        )
+        return {
+          ...ts.test,
+          isAttempted: ts.test.testAttempts.length > 0,
+          attemptCount: ts.test.testAttempts.length,
+          lastScore:
+            ts.test.testAttempts.length > 0
+              ? ts.test.testAttempts[0].percentage
+              : null,
+          obtainedMarks:
+            ts.test.testAttempts.length > 0
+              ? ts.test.testAttempts[0].score
+              : null,
+          totalMarks,
+          attemptHistory: ts.test.testAttempts,
+        }
+      }),
     }
 
     // For playlist, calculate completion

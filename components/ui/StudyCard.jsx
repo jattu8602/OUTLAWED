@@ -43,33 +43,24 @@ const StudyCard = ({
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ 
-        y: -8, 
-        scale: 1.02,
-        transition: { duration: 0.3, ease: "easeOut" }
-      }}
-      className="group relative overflow-hidden rounded-2xl shadow-lg shadow-gray-200/50 hover:shadow-xl hover:shadow-gray-300/60 transition-all duration-300"
-    >
+    <div className="group relative overflow-hidden rounded-2xl shadow-lg shadow-gray-200/50 hover:shadow-xl hover:shadow-gray-300/60 transition-all duration-300">
       {/* Background Image */}
-      <div 
+      <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-300 group-hover:bg-[url('/icons/cardbg2.jpg')]"
         style={{
           backgroundImage: 'url(/icons/cardbg.jpg)',
         }}
       />
-      
+
       {/* Shiny border effect */}
       <div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm" />
-      <div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-60 transition-opacity duration-300" />
-      
+      <div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 opacity-0 group-hover:opacity-60 transition-opacity duration-300 dark:hover:opacity-100" />
+
       {/* Semi-transparent overlay */}
       <div className="absolute inset-0 bg-white/80 backdrop-blur-sm group-hover:bg-white/70 transition-all duration-300" />
-      
+
       {/* Content */}
-      <div className="relative z-10 p-6">
+      <div className="relative z-10 p-6 flex flex-col h-full">
         {/* Header */}
         <div className="flex items-center justify-between mb-4">
           <div>
@@ -98,7 +89,9 @@ const StudyCard = ({
             <Clock className="w-4 h-4 mr-1" />
             {duration} min
           </div>
-          <div className={`px-3 py-1 rounded-full text-xs font-medium text-white bg-gradient-to-r ${badgeGradient}`}>
+          <div
+            className={`px-3 py-1 rounded-full text-xs font-medium text-white bg-gradient-to-r ${badgeGradient}`}
+          >
             {badgeLabel}
           </div>
         </div>
@@ -128,14 +121,12 @@ const StudyCard = ({
           <p className="text-sm text-gray-700 font-medium mb-1">
             <strong>Focus:</strong> {focusText}
           </p>
-          {reason && (
-            <p className="text-xs text-gray-500">{reason}</p>
-          )}
+          {reason && <p className="text-xs text-gray-500">{reason}</p>}
         </div>
 
-        {/* Action Button */}
+        {/* Action Button - Stick to Bottom */}
         {testName !== 'No test available' && (
-          <div className="pt-2">
+          <div className="mt-auto pt-2">
             {isCompleted ? (
               <div className="flex items-center justify-center text-sm text-green-600 font-semibold p-3 bg-green-50 rounded-lg border border-green-200">
                 <CheckCircle className="w-4 h-4 mr-2" />
@@ -165,7 +156,7 @@ const StudyCard = ({
           </div>
         )}
       </div>
-    </motion.div>
+    </div>
   )
 }
 

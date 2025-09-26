@@ -325,7 +325,7 @@ export default function LawBuddyClientPage() {
       >
         <div className="p-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100 ">
               Chat History
             </h2>
             <div className="flex items-center space-x-2">
@@ -344,7 +344,7 @@ export default function LawBuddyClientPage() {
                       console.error('Manual refresh error:', error)
                     )
                 }}
-                className="text-xs"
+                className="text-xs dark:text-slate-100"
               >
                 Refresh
               </Button>
@@ -352,18 +352,18 @@ export default function LawBuddyClientPage() {
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowHistory(false)}
-                className="lg:hidden"
+                className=" sm:block md:hidden bg-slate-100 dark:bg-slate-800"
               >
-                <X className="h-4 w-4" />
+                <X className="h-4 w-4 dark:text-slate-100" />
               </Button>
-              <Button
+              {/* <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowHistory(false)}
                 className="hidden lg:flex"
               >
                 <X className="h-4 w-4" />
-              </Button>
+              </Button> */}
             </div>
           </div>
         </div>
@@ -432,9 +432,9 @@ export default function LawBuddyClientPage() {
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowHistory(!showHistory)}
-                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800"
+                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 dark:text-slate-100"
               >
-                <History className="h-4 w-4" />
+                <History className="h-4 w-4 dark:text-slate-100" />
               </Button>
 
               <div className="flex items-center space-x-3">
@@ -453,7 +453,7 @@ export default function LawBuddyClientPage() {
             </div>
 
             <div className="flex items-center space-x-2">
-              {selectedTest && (
+              {/* {selectedTest && (
                 <Badge
                   variant="secondary"
                   className="flex items-center space-x-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-700"
@@ -471,16 +471,16 @@ export default function LawBuddyClientPage() {
                     <X className="h-3 w-3" />
                   </Button>
                 </Badge>
-              )}
+              )} */}
               <Button
                 onClick={startNewChat}
                 variant="outline"
                 size="sm"
-                className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700"
+                className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 dark:text-slate-100"
               >
-                <Sparkles className="h-4 w-4 mr-1" />
-                <span className="hidden sm:inline">New Chat</span>
-                <span className="sm:hidden">New</span>
+                <Sparkles className="h-4 w-4 mr-1 dark:text-slate-100" />
+                <span className="hidden sm:inline dark:text-slate-100">New Chat</span>
+                <span className="sm:hidden dark:text-slate-100">New</span>
               </Button>
             </div>
           </div>
@@ -507,7 +507,7 @@ export default function LawBuddyClientPage() {
                     variant="outline"
                     size="sm"
                     onClick={() => setInputMessage(prompt)}
-                    className="text-xs bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700"
+                    className="text-xs bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 dark:text-slate-100"
                   >
                     {prompt}
                   </Button>
@@ -615,9 +615,9 @@ export default function LawBuddyClientPage() {
                     : 'Ask me anything about law, tests, or study tips... (Type @ to reference a test)'
                 }
                 disabled={isLoading}
-                className="flex-1 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 rounded-xl"
+                className="flex-1 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 rounded-xl dark:text-slate-100"
               />
-              {selectedTest && (
+              {/* {selectedTest && (
                 <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
                   <Badge
                     variant="secondary"
@@ -631,7 +631,7 @@ export default function LawBuddyClientPage() {
                     <X className="h-3 w-3 ml-1" />
                   </Badge>
                 </div>
-              )}
+              )} */}
             </div>
             <Button
               onClick={sendMessage}
@@ -649,7 +649,7 @@ export default function LawBuddyClientPage() {
 
         {/* Test Reference Modal */}
         <Dialog open={showTestModal} onOpenChange={setShowTestModal}>
-          <DialogContent className="max-w-2xl max-h-[60vh] overflow-hidden bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
+          <DialogContent className="max-w-2xl max-h-[60vh] overflow-hidden bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 dark:text-slate-100">
             <DialogHeader>
               <DialogTitle className="flex items-center space-x-2 text-slate-900 dark:text-slate-100">
                 <TestTube className="h-5 w-5 text-blue-600 dark:text-blue-400" />
@@ -664,7 +664,7 @@ export default function LawBuddyClientPage() {
                 placeholder="Search tests..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400"
+                className="pl-10 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400 dark:text-slate-100"
                 autoFocus
               />
             </div>
