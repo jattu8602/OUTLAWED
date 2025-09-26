@@ -184,9 +184,11 @@ Remember: You're helping a law student prepare for CLAT and understand legal con
 
     // Save or update chat in database
     let currentChatId = chatId
+    console.log('Chat API - Current chatId:', currentChatId)
 
     if (!currentChatId) {
       // Create new chat
+      console.log('Chat API - Creating new chat for user:', session.user.id)
       const newChat = await prisma.lawBuddyChat.create({
         data: {
           userId: session.user.id,
@@ -199,8 +201,10 @@ Remember: You're helping a law student prepare for CLAT and understand legal con
         },
       })
       currentChatId = newChat.id
+      console.log('Chat API - Created new chat with ID:', currentChatId)
     } else {
       // Update existing chat
+      console.log('Chat API - Updating existing chat:', currentChatId)
       const existingChat = await prisma.lawBuddyChat.findUnique({
         where: { id: currentChatId },
       })
@@ -219,6 +223,7 @@ Remember: You're helping a law student prepare for CLAT and understand legal con
             updatedAt: new Date(),
           },
         })
+        console.log('Chat API - Updated existing chat')
       }
     }
 

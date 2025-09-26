@@ -8,11 +8,14 @@ const prisma = new PrismaClient()
 export async function GET(request) {
   try {
     const session = await getServerSession(authOptions)
+    console.log('History API - Session:', session?.user?.id)
 
     if (!session?.user?.id) {
+      console.log('History API - No session found')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    console.log('History API - Fetching chats for user:', session.user.id)
     const chats = await prisma.lawBuddyChat.findMany({
       where: {
         userId: session.user.id,
@@ -31,10 +34,14 @@ export async function GET(request) {
       take: 50, // Limit to last 50 chats
     })
 
+    console.log('History API - Found chats:', chats.length)
+    console.log('History API - Chats data:', chats)
+
     return NextResponse.json({
       chats: chats.map((chat) => ({
         id: chat.id,
         title: chat.title,
+        messages: chat.messages, // Include the full messages array
         referenceTest: chat.referenceTest,
         messageCount: chat.messages?.length || 0,
         updatedAt: chat.updatedAt,

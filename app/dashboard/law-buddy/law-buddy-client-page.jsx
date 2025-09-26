@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Avatar } from '@/components/ui/avatar'
 import { Separator } from '@/components/ui/separator'
+import { MarkdownRenderer } from '@/components/ui/markdown-renderer'
 import {
   Dialog,
   DialogContent,
@@ -73,6 +74,16 @@ export default function LawBuddyClientPage() {
     }
   }, [searchQuery, userTests])
 
+  // Debug chatHistory changes
+  useEffect(() => {
+    console.log('chatHistory state changed:', chatHistory)
+  }, [chatHistory])
+
+  // Debug messages changes
+  useEffect(() => {
+    console.log('messages state changed:', messages)
+  }, [messages])
+
   // Load user's test attempts for reference
   useEffect(() => {
     const loadUserTests = async () => {
@@ -96,10 +107,17 @@ export default function LawBuddyClientPage() {
   useEffect(() => {
     const loadChatHistory = async () => {
       try {
+        console.log('Loading chat history for user:', session?.user?.id)
         const response = await fetch('/api/law-buddy/history')
+        console.log('History API response status:', response.status)
+
         if (response.ok) {
           const data = await response.json()
+          console.log('Chat history data:', data)
+          console.log('Setting chatHistory to:', data.chats || [])
           setChatHistory(data.chats || [])
+        } else {
+          console.error('Failed to load chat history:', response.status)
         }
       } catch (error) {
         console.error('Error loading chat history:', error)
@@ -203,12 +221,30 @@ export default function LawBuddyClientPage() {
   }
 
   const loadChat = (chatId) => {
+    console.log('Loading chat with ID:', chatId)
+    console.log('Available chats:', chatHistory)
+
     // Load specific chat from history
     const chat = chatHistory.find((c) => c.id === chatId)
+    console.log('Found chat:', chat)
+
     if (chat) {
-      setMessages(chat.messages || [])
+      console.log('Chat messages:', chat.messages)
+
+      // Convert timestamp strings back to Date objects
+      const messagesWithDates = (chat.messages || []).map((message) => ({
+        ...message,
+        timestamp: new Date(message.timestamp),
+      }))
+
+      setMessages(messagesWithDates)
       setCurrentChatId(chatId)
       setSelectedTest(chat.referenceTest || null)
+      // Close sidebar on mobile after loading chat
+      setShowHistory(false)
+      console.log('Chat loaded successfully')
+    } else {
+      console.log('Chat not found in history')
     }
   }
 
@@ -270,48 +306,97 @@ export default function LawBuddyClientPage() {
   ]
 
   return (
-    <div className="flex h-[calc(100vh-4rem)] bg-slate-50 dark:bg-slate-950">
+    <div className="flex h-[calc(100vh-4rem)] bg-slate-50 dark:bg-slate-950 relative">
+      {/* Mobile Overlay */}
+      {showHistory && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setShowHistory(false)}
+        />
+      )}
+
       {/* Chat History Sidebar */}
       <div
         className={`${
-          showHistory ? 'w-80' : 'w-0'
-        } transition-all duration-300 overflow-hidden bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-700 flex flex-col`}
+          showHistory ? 'w-80' : 'w-0 lg:w-80'
+        } transition-all duration-300 overflow-hidden bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-700 flex flex-col z-50 lg:z-auto ${
+          showHistory ? 'fixed lg:relative inset-y-0 left-0' : 'hidden lg:flex'
+        }`}
       >
-        <div className="p-4 border-b border-slate-200 dark:border-slate-700">
+        <div className="p-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
               Chat History
             </h2>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowHistory(false)}
-              className="md:hidden"
-            >
-              <X className="h-4 w-4" />
-            </Button>
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  // Manual refresh of chat history
+                  fetch('/api/law-buddy/history')
+                    .then((response) => response.json())
+                    .then((data) => {
+                      console.log('Manual refresh - Chat history data:', data)
+                      setChatHistory(data.chats || [])
+                    })
+                    .catch((error) =>
+                      console.error('Manual refresh error:', error)
+                    )
+                }}
+                className="text-xs"
+              >
+                Refresh
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowHistory(false)}
+                className="lg:hidden"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowHistory(false)}
+                className="hidden lg:flex"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 space-y-2">
+          {/* Debug info */}
+          <div className="text-xs text-slate-400 mb-2">
+            Debug: chatHistory.length = {chatHistory.length}
+          </div>
+
           {chatHistory.length === 0 ? (
             <div className="text-center text-slate-500 dark:text-slate-400 py-8">
-              <MessageSquare className="h-8 w-8 mx-auto mb-2 text-slate-400" />
+              <MessageSquare className="h-8 w-8 mx-auto mb-2 text-slate-400 dark:text-slate-500" />
               <p className="text-sm">No chat history yet</p>
             </div>
           ) : (
             chatHistory.map((chat) => (
               <Card
                 key={chat.id}
-                className={`p-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors border-slate-200 dark:border-slate-700 ${
+                className={`p-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 border-slate-200 dark:border-slate-700 ${
                   currentChatId === chat.id
-                    ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700'
-                    : ''
+                    ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-700 shadow-sm'
+                    : 'hover:shadow-sm'
                 }`}
-                onClick={() => loadChat(chat.id)}
+                onClick={() => {
+                  loadChat(chat.id)
+                  setShowHistory(false) // Close sidebar on mobile after selection
+                }}
               >
                 <div className="flex items-start space-x-3">
-                  <MessageSquare className="h-4 w-4 text-slate-500 dark:text-slate-400 mt-1" />
+                  <div className="p-1.5 bg-slate-100 dark:bg-slate-800 rounded-md">
+                    <MessageSquare className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+                  </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-slate-900 dark:text-slate-100 truncate">
                       {chat.title}
@@ -320,7 +405,10 @@ export default function LawBuddyClientPage() {
                       {new Date(chat.updatedAt).toLocaleDateString()}
                     </p>
                     {chat.referenceTest && (
-                      <Badge variant="secondary" className="mt-1 text-xs">
+                      <Badge
+                        variant="secondary"
+                        className="mt-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300"
+                      >
                         <TestTube className="h-3 w-3 mr-1" />
                         {chat.referenceTest.title}
                       </Badge>
@@ -336,19 +424,21 @@ export default function LawBuddyClientPage() {
       {/* Main Chat Interface */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 p-4">
+        <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 p-4 shadow-sm">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
+              {/* Mobile History Button */}
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowHistory(!showHistory)}
-                className="md:hidden"
+                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800"
               >
-                <ChevronLeft className="h-4 w-4" />
+                <History className="h-4 w-4" />
               </Button>
-              <div className="flex items-center space-x-2">
-                <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg">
+
+              <div className="flex items-center space-x-3">
+                <div className="p-2.5 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-sm">
                   <Brain className="h-5 w-5 text-white" />
                 </div>
                 <div>
@@ -366,86 +456,58 @@ export default function LawBuddyClientPage() {
               {selectedTest && (
                 <Badge
                   variant="secondary"
-                  className="flex items-center space-x-1"
+                  className="flex items-center space-x-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-700"
                 >
                   <TestTube className="h-3 w-3" />
-                  <span>{selectedTest.title}</span>
+                  <span className="max-w-32 truncate">
+                    {selectedTest.title}
+                  </span>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setSelectedTest(null)}
-                    className="h-4 w-4 p-0"
+                    className="h-4 w-4 p-0 hover:bg-blue-200 dark:hover:bg-blue-800"
                   >
                     <X className="h-3 w-3" />
                   </Button>
                 </Badge>
               )}
-              <Button onClick={startNewChat} variant="outline" size="sm">
+              <Button
+                onClick={startNewChat}
+                variant="outline"
+                size="sm"
+                className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700"
+              >
                 <Sparkles className="h-4 w-4 mr-1" />
-                New Chat
+                <span className="hidden sm:inline">New Chat</span>
+                <span className="sm:hidden">New</span>
               </Button>
             </div>
           </div>
         </div>
 
-        {/* Reference Test Selector */}
-        {!selectedTest && userTests.length > 0 && (
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-b border-blue-200 dark:border-blue-700 p-4">
-            <div className="flex items-center space-x-2 mb-3">
-              <BookOpen className="h-4 w-4 text-blue-600" />
-              <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                Select a test for personalized assistance
-              </span>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-              {userTests.slice(0, 6).map((test) => (
-                <Card
-                  key={test.id}
-                  className="p-3 cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors border-blue-200 dark:border-blue-700"
-                  onClick={() => setSelectedTest(test)}
-                >
-                  <div className="flex items-center space-x-2">
-                    <TestTube className="h-4 w-4 text-blue-600" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-slate-900 dark:text-slate-100 truncate">
-                        {test.title}
-                      </p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">
-                        Score: {test.score || 'N/A'}% • {test.type}
-                      </p>
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* Messages Area */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 dark:bg-slate-900">
           {messages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-center">
-              <div className="p-4 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-full mb-4">
-                <Brain className="h-8 w-8 text-blue-600" />
+            <div className="flex flex-col items-center justify-center h-full text-center px-4">
+              <div className="p-6 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-2xl mb-6 shadow-sm">
+                <Brain className="h-10 w-10 text-blue-600 dark:text-blue-400" />
               </div>
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100 mb-2">
+              <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-3">
                 Welcome to Law Buddy!
               </h3>
-              <p className="text-slate-600 dark:text-slate-400 mb-4 max-w-md">
+              <p className="text-slate-600 dark:text-slate-400 mb-6 max-w-md leading-relaxed">
                 I'm here to help you with legal concepts, test preparation, and
-                study guidance.
-                {selectedTest
-                  ? ` I can also help you with questions related to "${selectedTest.title}".`
-                  : ' Select a test above for personalized assistance.'}
+                study guidance. Ask me anything about law or CLAT preparation!
               </p>
-              <div className="flex flex-wrap gap-2 justify-center">
+              <div className="flex flex-wrap gap-2 justify-center max-w-lg">
                 {quickStartPrompts.map((prompt, index) => (
                   <Button
                     key={index}
                     variant="outline"
                     size="sm"
                     onClick={() => setInputMessage(prompt)}
-                    className="text-xs"
+                    className="text-xs bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700"
                   >
                     {prompt}
                   </Button>
@@ -469,23 +531,38 @@ export default function LawBuddyClientPage() {
                         : ''
                     }`}
                   >
-                    <Avatar className="h-8 w-8 flex-shrink-0">
+                    <div
+                      className={`h-8 w-8 flex-shrink-0 rounded-full flex items-center justify-center ${
+                        message.role === 'user'
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+                      }`}
+                    >
                       {message.role === 'user' ? (
                         <User className="h-4 w-4" />
                       ) : (
                         <Bot className="h-4 w-4" />
                       )}
-                    </Avatar>
+                    </div>
                     <div
-                      className={`px-4 py-3 rounded-lg ${
+                      className={`px-4 py-3 rounded-xl shadow-sm ${
                         message.role === 'user'
                           ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white'
-                          : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm'
+                          : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700'
                       }`}
                     >
-                      <p className="text-sm whitespace-pre-wrap text-slate-900 dark:text-slate-100">
-                        {message.content}
-                      </p>
+                      {message.role === 'user' ? (
+                        <p className="text-sm whitespace-pre-wrap text-white leading-relaxed">
+                          {message.content}
+                        </p>
+                      ) : (
+                        <div className="text-sm leading-relaxed">
+                          <MarkdownRenderer
+                            content={message.content}
+                            className="text-slate-900 dark:text-slate-100"
+                          />
+                        </div>
+                      )}
                       <p
                         className={`text-xs mt-2 ${
                           message.role === 'user'
@@ -493,7 +570,9 @@ export default function LawBuddyClientPage() {
                             : 'text-slate-500 dark:text-slate-400'
                         }`}
                       >
-                        {message.timestamp.toLocaleTimeString()}
+                        {message.timestamp instanceof Date
+                          ? message.timestamp.toLocaleTimeString()
+                          : new Date(message.timestamp).toLocaleTimeString()}
                       </p>
                     </div>
                   </div>
@@ -504,12 +583,12 @@ export default function LawBuddyClientPage() {
           {isTyping && (
             <div className="flex justify-start">
               <div className="flex space-x-3 max-w-3xl">
-                <Avatar className="h-8 w-8 flex-shrink-0">
-                  <Bot className="h-4 w-4" />
-                </Avatar>
-                <div className="px-4 py-3 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm">
+                <div className="h-8 w-8 flex-shrink-0 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                  <Bot className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+                </div>
+                <div className="px-4 py-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm">
                   <div className="flex items-center space-x-2">
-                    <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+                    <Loader2 className="h-4 w-4 animate-spin text-blue-600 dark:text-blue-400" />
                     <span className="text-sm text-slate-600 dark:text-slate-400">
                       Law Buddy is thinking...
                     </span>
@@ -522,8 +601,8 @@ export default function LawBuddyClientPage() {
         </div>
 
         {/* Input Area */}
-        <div className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 p-4">
-          <div className="flex space-x-2">
+        <div className="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 p-4 shadow-sm">
+          <div className="flex space-x-3">
             <div className="flex-1 relative">
               <Input
                 ref={inputRef}
@@ -536,17 +615,19 @@ export default function LawBuddyClientPage() {
                     : 'Ask me anything about law, tests, or study tips... (Type @ to reference a test)'
                 }
                 disabled={isLoading}
-                className="flex-1"
+                className="flex-1 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 rounded-xl"
               />
               {selectedTest && (
                 <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
                   <Badge
                     variant="secondary"
-                    className="text-xs cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700"
+                    className="text-xs cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300"
                     onClick={() => setSelectedTest(null)}
                   >
                     <TestTube className="h-3 w-3 mr-1" />
-                    {selectedTest.title}
+                    <span className="max-w-20 truncate">
+                      {selectedTest.title}
+                    </span>
                     <X className="h-3 w-3 ml-1" />
                   </Badge>
                 </div>
@@ -555,53 +636,57 @@ export default function LawBuddyClientPage() {
             <Button
               onClick={sendMessage}
               disabled={!inputMessage.trim() || isLoading}
-              className="px-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              className="px-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl shadow-sm"
             >
-              <Send className="h-4 w-4" />
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Send className="h-4 w-4" />
+              )}
             </Button>
           </div>
         </div>
 
         {/* Test Reference Modal */}
         <Dialog open={showTestModal} onOpenChange={setShowTestModal}>
-          <DialogContent className="max-w-2xl max-h-[60vh] overflow-hidden bg-white dark:bg-slate-900">
+          <DialogContent className="max-w-2xl max-h-[60vh] overflow-hidden bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700">
             <DialogHeader>
-              <DialogTitle className="flex items-center space-x-2">
-                <TestTube className="h-5 w-5 text-blue-600" />
+              <DialogTitle className="flex items-center space-x-2 text-slate-900 dark:text-slate-100">
+                <TestTube className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 <span>Reference a Test</span>
               </DialogTitle>
             </DialogHeader>
 
             {/* Search Box */}
-            <div className="relative mb-3">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <div className="relative mb-4">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-slate-500" />
               <Input
                 placeholder="Search tests..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400"
                 autoFocus
               />
             </div>
 
             {/* Test List - Compact */}
-            <div className="overflow-y-auto max-h-64 space-y-1">
+            <div className="overflow-y-auto max-h-64 space-y-2">
               {filteredTests.length === 0 ? (
-                <div className="text-center py-6 text-slate-500">
-                  <TestTube className="h-6 w-6 mx-auto mb-2 text-slate-400" />
+                <div className="text-center py-6 text-slate-500 dark:text-slate-400">
+                  <TestTube className="h-6 w-6 mx-auto mb-2 text-slate-400 dark:text-slate-500" />
                   <p className="text-sm">No tests found</p>
                 </div>
               ) : (
                 filteredTests.map((test) => (
                   <div
                     key={test.id}
-                    className="p-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors rounded-lg border border-slate-200 dark:border-slate-700"
+                    className="p-3 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors rounded-lg border border-slate-200 dark:border-slate-700 hover:shadow-sm"
                     onClick={() => selectTestFromModal(test)}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
-                        <div className="p-1.5 bg-blue-100 dark:bg-blue-900 rounded-md">
-                          <TestTube className="h-3 w-3 text-blue-600" />
+                        <div className="p-1.5 bg-blue-100 dark:bg-blue-900/30 rounded-md">
+                          <TestTube className="h-3 w-3 text-blue-600 dark:text-blue-400" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="font-medium text-slate-900 dark:text-slate-100 truncate text-sm">
