@@ -20,6 +20,8 @@ export default function TestCard({
   negativeMarks = 0.25,
   attemptCount = 0,
   lastScore,
+  obtainedMarks,
+  totalMarks,
   isNew = false,
   isAttempted = false,
   attemptedAt,
@@ -52,12 +54,14 @@ export default function TestCard({
     return 'Pending'
   }
 
-  const getTestScore = () => {
-    if (!isAttempted) return '0%'
-    if (lastScore !== undefined && lastScore !== null) {
-      return `${lastScore.toFixed(2)}%`
+  const getTestScoreDisplay = () => {
+    if (!isAttempted || obtainedMarks === undefined || obtainedMarks === null) {
+      return `– / ${totalMarks || 'N/A'}`
     }
-    return '0%'
+    const marksDisplay = Number.isInteger(obtainedMarks)
+      ? obtainedMarks
+      : obtainedMarks.toFixed(2)
+    return `${marksDisplay} / ${totalMarks}`
   }
 
   const getScorePercentage = () => {
@@ -245,7 +249,7 @@ export default function TestCard({
                 />
               </div>
               <span className="text-xs dark:text-gray-300">
-                {getTestScore()}
+                {getTestScoreDisplay()}
               </span>
             </div>
           </div>
@@ -331,7 +335,7 @@ export default function TestCard({
                 }}
               />
             </div>
-            <span className="text-xs">{getTestScore()}</span>
+            <span className="text-xs">{getTestScoreDisplay()}</span>
           </div>
 
           {/* Actions */}

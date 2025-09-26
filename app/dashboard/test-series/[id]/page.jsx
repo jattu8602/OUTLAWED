@@ -142,6 +142,8 @@ export default function TestSeriesDetailPage() {
                   isAttempted={test.isAttempted}
                   attemptCount={test.attemptCount}
                   lastScore={test.lastScore}
+                  obtainedMarks={test.obtainedMarks}
+                  totalMarks={test.totalMarks}
                   attemptHistory={test.attemptHistory}
                   locked={
                     test.type === 'PAID' && session?.user?.role === 'FREE'
