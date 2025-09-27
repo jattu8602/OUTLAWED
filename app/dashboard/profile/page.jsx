@@ -26,6 +26,7 @@ import { useProfileName } from '@/lib/hooks/useProfileName'
 import ReviewForm from '@/components/ui/review-form'
 import ReviewHistory from '@/components/ui/review-history'
 import EnhancedAnalytics from '@/components/analytics/EnhancedAnalytics'
+import ProfileRewards from '@/components/profile/ProfileRewards'
 import { toast } from 'sonner'
 
 export default function ProfilePage() {
@@ -331,9 +332,11 @@ export default function ProfilePage() {
 
       {/* Analytics Section */}
       <div className="space-y-6">
-
         <EnhancedAnalytics />
       </div>
+
+      {/* Rewards Section */}
+      <ProfileRewards />
 
       {/* Reviews Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

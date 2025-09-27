@@ -1,0 +1,12 @@
+# Profile rewards
+
+basically in profile page above the review section we will be giving  3  rewards section
+
+1. steak - make a nice horizontal ui scrollable  basically based on the streak it will gived rewards
+
+2. pomodomo - is like if user completed the maximum 25 and 5 minutes cycle it will give based on that rewards to user
+
+3. schedular - schedular will be like if 7 days completed properly with all the test then it will calculate it one cycle okay
+
+all the ui must be shown horizontal - make nice badges by own make better ui
+i m referencing the api endpoints of all the above features 

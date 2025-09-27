@@ -81,10 +81,14 @@ export default function LawBuddyClientPage() {
             // Study time finished, start break
             setIsStudyTime(false)
             setTimeLeft(5 * 60) // 5 minutes break
+            // Record completed study session
+            recordPomodoroSession('study', 25)
           } else {
             // Break finished, start study
             setIsStudyTime(true)
             setTimeLeft(25 * 60) // 25 minutes study
+            // Record completed break session
+            recordPomodoroSession('break', 5)
           }
           return prev
         }
@@ -118,6 +122,24 @@ export default function LawBuddyClientPage() {
     return `${mins.toString().padStart(2, '0')}:${secs
       .toString()
       .padStart(2, '0')}`
+  }
+
+  // Record pomodoro session
+  const recordPomodoroSession = async (sessionType, duration) => {
+    try {
+      await fetch('/api/user/pomodoro', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          sessionType,
+          duration,
+        }),
+      })
+    } catch (error) {
+      console.error('Error recording pomodoro session:', error)
+    }
   }
 
   // Handle page visibility change

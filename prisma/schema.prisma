@@ -107,10 +107,11 @@ model User {
   reviews Review[]
   notificationLikes NotificationLike[]
   testSeries UsersOnTestSeries[]
+  lawBuddyChats LawBuddyChat[]
+  pomodoroSessions PomodoroSession[]
   lexiaTests        LexiaTest[]
   lexiaTestAttempts LexiaTestAttempt[]
   schedules         PersonalizedSchedule[]
-  lawBuddyChats     LawBuddyChat[]
 }
 
 model VerificationToken {
@@ -433,4 +434,15 @@ model LawBuddyChat {
   updatedAt       DateTime @updatedAt
 
   @@index([userId])
+}
+
+model PomodoroSession {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sessionType String   // 'study' or 'break'
+  duration    Int      // in minutes
+  completedAt DateTime @default(now())
+
+  @@index([userId, completedAt])
 }

@@ -7,6 +7,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ========== CUSTOM UTILITIES ========== */
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* ========== BASE THEME VARIABLES ========== */
 @layer base {
   :root {
