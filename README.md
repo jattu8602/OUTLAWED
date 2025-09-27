@@ -165,6 +165,4 @@ npm run dev
 
 ## 👨‍💻 Team Mantrix – Samadhan 2.0  
 
-
-👨‍💻 Team Mantrix – Samadhan 2.0
 ```
