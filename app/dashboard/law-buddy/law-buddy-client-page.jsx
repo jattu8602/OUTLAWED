@@ -32,6 +32,9 @@ import {
   Clock,
   TrendingUp,
   Calendar,
+  Play,
+  Pause,
+  RotateCcw,
 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 
@@ -50,6 +53,12 @@ export default function LawBuddyClientPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [filteredTests, setFilteredTests] = useState([])
 
+  // Pomodoro Timer States
+  const [timerState, setTimerState] = useState('stopped') // 'stopped', 'running', 'paused'
+  const [timeLeft, setTimeLeft] = useState(25 * 60) // 25 minutes in seconds
+  const [isStudyTime, setIsStudyTime] = useState(true) // true for study, false for break
+  const [timerInterval, setTimerInterval] = useState(null)
+
   const messagesEndRef = useRef(null)
   const inputRef = useRef(null)
 
@@ -57,6 +66,82 @@ export default function LawBuddyClientPage() {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
+
+  // Pomodoro Timer Functions
+  const startTimer = () => {
+    if (timerInterval) {
+      clearInterval(timerInterval)
+    }
+
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          // Timer finished, switch between study and break
+          if (isStudyTime) {
+            // Study time finished, start break
+            setIsStudyTime(false)
+            setTimeLeft(5 * 60) // 5 minutes break
+          } else {
+            // Break finished, start study
+            setIsStudyTime(true)
+            setTimeLeft(25 * 60) // 25 minutes study
+          }
+          return prev
+        }
+        return prev - 1
+      })
+    }, 1000)
+
+    setTimerInterval(interval)
+    setTimerState('running')
+  }
+
+  const stopTimer = () => {
+    if (timerInterval) {
+      clearInterval(timerInterval)
+      setTimerInterval(null)
+    }
+    setTimerState('stopped')
+    setTimeLeft(25 * 60)
+    setIsStudyTime(true)
+  }
+
+  const restartTimer = () => {
+    stopTimer()
+    startTimer()
+  }
+
+  // Format time display
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins.toString().padStart(2, '0')}:${secs
+      .toString()
+      .padStart(2, '0')}`
+  }
+
+  // Handle page visibility change
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden && timerState === 'running') {
+        stopTimer()
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [timerState])
+
+  // Cleanup timer on component unmount
+  useEffect(() => {
+    return () => {
+      if (timerInterval) {
+        clearInterval(timerInterval)
+      }
+    }
+  }, [timerInterval])
 
   useEffect(() => {
     scrollToBottom()
@@ -356,24 +441,24 @@ export default function LawBuddyClientPage() {
               >
                 <X className="h-4 w-4 dark:text-slate-100" />
               </Button>
-              {/* <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowHistory(false)}
-                className="hidden lg:flex"
-              >
-                <X className="h-4 w-4" />
-              </Button> */}
             </div>
+          </div>
+
+          {/* New Chat Button */}
+          <div className="mt-4">
+            <Button
+              onClick={startNewChat}
+              variant="outline"
+              size="sm"
+              className="w-full bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 dark:text-slate-100"
+            >
+              <Sparkles className="h-4 w-4 mr-2 dark:text-slate-100" />
+              New Chat
+            </Button>
           </div>
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 space-y-2">
-          {/* Debug info */}
-          <div className="text-xs text-slate-400 mb-2">
-            Debug: chatHistory.length = {chatHistory.length}
-          </div>
-
           {chatHistory.length === 0 ? (
             <div className="text-center text-slate-500 dark:text-slate-400 py-8">
               <MessageSquare className="h-8 w-8 mx-auto mb-2 text-slate-400 dark:text-slate-500" />
@@ -452,7 +537,42 @@ export default function LawBuddyClientPage() {
               </div>
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-4">
+              {/* Pomodoro Timer */}
+              <div className="flex items-center space-x-3 bg-slate-50 dark:bg-slate-800 rounded-lg px-3 py-2 border border-slate-200 dark:border-slate-700">
+                <div className="flex items-center space-x-2">
+                  <Clock className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                    {isStudyTime ? 'Study' : 'Break'}
+                  </span>
+                </div>
+
+                <div className="text-lg font-mono font-bold text-slate-900 dark:text-slate-100">
+                  {formatTime(timeLeft)}
+                </div>
+
+                <div className="flex items-center space-x-1">
+                  {timerState === 'stopped' ? (
+                    <Button
+                      onClick={startTimer}
+                      size="sm"
+                      className="h-7 px-2 bg-green-600 hover:bg-green-700 text-white"
+                    >
+                      <Play className="h-3 w-3" />
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={restartTimer}
+                      size="sm"
+                      variant="outline"
+                      className="h-7 px-2 bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 dark:text-slate-100"
+                    >
+                      <RotateCcw className="h-3 w-3" />
+                    </Button>
+                  )}
+                </div>
+              </div>
+
               {/* {selectedTest && (
                 <Badge
                   variant="secondary"
@@ -472,16 +592,6 @@ export default function LawBuddyClientPage() {
                   </Button>
                 </Badge>
               )} */}
-              <Button
-                onClick={startNewChat}
-                variant="outline"
-                size="sm"
-                className="bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 dark:text-slate-100"
-              >
-                <Sparkles className="h-4 w-4 mr-1 dark:text-slate-100" />
-                <span className="hidden sm:inline dark:text-slate-100">New Chat</span>
-                <span className="sm:hidden dark:text-slate-100">New</span>
-              </Button>
             </div>
           </div>
         </div>
