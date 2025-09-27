@@ -9,6 +9,7 @@ import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import ConfirmModal from '@/components/ui/confirm-modal'
+import CalmingScreen from '@/components/CalmingScreen'
 import {
   Clock,
   FileText,
@@ -682,72 +683,13 @@ export default function TestTakingPage() {
 
   // Start confirmation modal
   if (showStartModal) {
-    const hasPreviousAttempts = attemptHistory.length > 0
-    const latestAttempt = attemptHistory[0]
-
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-          <CardContent className="p-6">
-            <div className="text-center space-y-4">
-              <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mx-auto">
-                <AlertTriangle className="w-8 h-8 text-blue-600 dark:text-blue-400" />
-              </div>
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                {hasPreviousAttempts ? 'Reattempt Test' : 'Test Instructions'}
-              </h2>
-
-              {hasPreviousAttempts && (
-                <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
-                  <p className="text-sm text-blue-800 dark:text-blue-200">
-                    Previous attempt: {latestAttempt.score}% (
-                    {latestAttempt.correctAnswers}/
-                    {latestAttempt.totalQuestions} correct)
-                  </p>
-                  <p className="text-xs text-blue-600 dark:text-blue-400 mt-1">
-                    Attempt #{latestAttempt.attemptNumber} •{' '}
-                    {new Date(latestAttempt.completedAt).toLocaleDateString()}
-                  </p>
-                </div>
-              )}
-
-              <p className="text-gray-600 dark:text-gray-300">
-                {hasPreviousAttempts
-                  ? 'You are about to start a new attempt. Previous attempts will be preserved.'
-                  : 'You are about to enter full-screen test mode. Once started:'}
-              </p>
-
-              {!hasPreviousAttempts && (
-                <ul className="text-left text-sm text-gray-600 dark:text-gray-300 space-y-2">
-                  <li>• Test will run in full-screen mode</li>
-                  <li>• Exiting full-screen will auto-submit the test</li>
-                  <li>
-                    • Timer will countdown from{' '}
-                    {formatTime(test.durationInMinutes * 60)}
-                  </li>
-                  <li>• Test auto-submits when time runs out</li>
-                </ul>
-              )}
-
-              <div className="flex gap-3 pt-4">
-                <Button
-                  variant="outline"
-                  onClick={() => router.push('/dashboard')}
-                  className="flex-1 border-2 border-gray-200 dark:border-gray-700 dark:text-white"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handleStartTest}
-                  className="flex-1 border-2 border-gray-200 dark:border-gray-700 dark:text-white"
-                >
-                  {hasPreviousAttempts ? 'Start Reattempt' : 'Start Test'}
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <CalmingScreen
+        onStartTest={handleStartTest}
+        onCancel={() => router.push('/dashboard')}
+        testName={test.title}
+        testDuration={test.durationInMinutes}
+      />
     )
   }
 
