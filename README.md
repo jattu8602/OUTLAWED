@@ -134,46 +134,37 @@ npx prisma db push
 ```bash
 npm run dev
 ```
-```
-🔄 Development Workflow
+## 🔄 Development Workflow  
+- Update schema in `prisma/schema.prisma`  
+- Generate client → `npx prisma generate`  
+- Push DB changes → `npx prisma db push`  
+- Create UI components as needed  
+- Build API routes  
+- Connect frontend  
+- Test thoroughly  
 
-Update schema in prisma/schema.prisma
+---
 
-Generate client → npx prisma generate
+## 📊 Evaluation Metrics  
+- **Engagement** → DAU, streaks, session time  
+- **Time-Saving** → Test generation <5s  
+- **Learning Progress** → Score improvement  
+- **Accuracy** → >90% CLAT pattern match  
+- **Scalability** → Thousands of learners concurrently  
+- **Adoption & Retention** → Registered vs active users  
 
-Push DB changes → npx prisma db push
+---
 
-Create UI components as needed
+## ✨ Anticipated Impact  
+- Reduce dependency on costly offline coaching  
+- Empower aspirants with **AI-curated adaptive prep**  
+- Build a **peer-learning ecosystem** (rooms, leaderboards)  
+- Offer **scalable, affordable, and exam-accurate preparation**  
 
-Build API routes
+---
 
-Connect frontend
+## 👨‍💻 Team Mantrix – Samadhan 2.0  
 
-Test thoroughly
-
-📊 Evaluation Metrics
-
-Engagement → DAU, streaks, session time
-
-Time-Saving → Test generation <5s
-
-Learning Progress → Score improvement
-
-Accuracy → >90% CLAT pattern match
-
-Scalability → Thousands of learners concurrently
-
-Adoption & Retention → Registered vs active users
-
-✨ Anticipated Impact
-
-Reduce dependency on costly offline coaching
-
-Empower aspirants with AI-curated adaptive prep
-
-Build a peer-learning ecosystem (rooms, leaderboards)
-
-Offer scalable, affordable, and exam-accurate preparation
 
 👨‍💻 Team Mantrix – Samadhan 2.0
 ```
