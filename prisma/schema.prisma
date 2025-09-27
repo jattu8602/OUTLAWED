@@ -112,6 +112,7 @@ model User {
   lexiaTests        LexiaTest[]
   lexiaTestAttempts LexiaTestAttempt[]
   schedules         PersonalizedSchedule[]
+  learningRoadmaps  LearningRoadmap[]
 }
 
 model VerificationToken {
@@ -445,4 +446,34 @@ model PomodoroSession {
   completedAt DateTime @default(now())
 
   @@index([userId, completedAt])
+}
+
+model LearningRoadmap {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  topic       String   // The topic the roadmap is for
+  processes   Json     // Array of process objects with title, description, completed status
+  isActive    Boolean  @default(true)
+  chatId      String?  @db.ObjectId // Reference to the chat where roadmap was created
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  roadmapProcesses RoadmapProcess[]
+
+  @@index([userId, isActive])
+}
+
+model RoadmapProcess {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  roadmapId   String   @db.ObjectId
+  roadmap     LearningRoadmap @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  order       Int      // Sequential order of the process
+  isCompleted Boolean  @default(false)
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+
+  @@index([roadmapId, order])
 }

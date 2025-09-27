@@ -53,6 +53,11 @@ export default function LawBuddyClientPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [filteredTests, setFilteredTests] = useState([])
 
+  // Roadmap States
+  const [activeRoadmap, setActiveRoadmap] = useState(null)
+  const [roadmaps, setRoadmaps] = useState([])
+  const [showRoadmapDropdown, setShowRoadmapDropdown] = useState(false)
+
   // Pomodoro Timer States
   const [timerState, setTimerState] = useState('stopped') // 'stopped', 'running', 'paused'
   const [timeLeft, setTimeLeft] = useState(25 * 60) // 25 minutes in seconds
@@ -236,6 +241,36 @@ export default function LawBuddyClientPage() {
     }
   }, [session])
 
+  // Load roadmaps
+  useEffect(() => {
+    const loadRoadmaps = async () => {
+      try {
+        console.log('Loading roadmaps for user:', session?.user?.id)
+        const response = await fetch('/api/law-buddy/roadmap')
+        if (response.ok) {
+          const data = await response.json()
+          console.log('Loaded roadmaps:', data.roadmaps)
+          setRoadmaps(data.roadmaps || [])
+
+          // Set active roadmap for current chat
+          if (currentChatId) {
+            const chatRoadmap = data.roadmaps.find(
+              (roadmap) => roadmap.chatId === currentChatId
+            )
+            console.log('Active roadmap for chat:', chatRoadmap)
+            setActiveRoadmap(chatRoadmap || null)
+          }
+        }
+      } catch (error) {
+        console.error('Error loading roadmaps:', error)
+      }
+    }
+
+    if (session?.user?.id) {
+      loadRoadmaps()
+    }
+  }, [session, currentChatId])
+
   const sendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return
 
@@ -303,6 +338,38 @@ export default function LawBuddyClientPage() {
               console.error('Error loading chat history:', error)
             )
         }
+
+        // Handle roadmap creation
+        if (data.roadmap) {
+          console.log('Roadmap created:', data.roadmap)
+          setActiveRoadmap(data.roadmap)
+          // Reload roadmaps
+          fetch('/api/law-buddy/roadmap')
+            .then((response) => (response.ok ? response.json() : null))
+            .then((data) => {
+              console.log('Reloaded roadmaps:', data)
+              if (data) setRoadmaps(data.roadmaps || [])
+            })
+            .catch((error) => console.error('Error loading roadmaps:', error))
+        }
+
+        // Handle process completion
+        if (data.completedProcess) {
+          // Reload roadmaps to update completion status
+          fetch('/api/law-buddy/roadmap')
+            .then((response) => (response.ok ? response.json() : null))
+            .then((data) => {
+              if (data) {
+                setRoadmaps(data.roadmaps || [])
+                // Update active roadmap
+                const chatRoadmap = data.roadmaps.find(
+                  (roadmap) => roadmap.chatId === currentChatId
+                )
+                setActiveRoadmap(chatRoadmap || null)
+              }
+            })
+            .catch((error) => console.error('Error loading roadmaps:', error))
+        }
       } else {
         throw new Error('Failed to send message')
       }
@@ -325,6 +392,7 @@ export default function LawBuddyClientPage() {
     setMessages([])
     setCurrentChatId(null)
     setSelectedTest(null)
+    setActiveRoadmap(null)
   }
 
   const loadChat = (chatId) => {
@@ -347,6 +415,20 @@ export default function LawBuddyClientPage() {
       setMessages(messagesWithDates)
       setCurrentChatId(chatId)
       setSelectedTest(chat.referenceTest || null)
+
+      // Load roadmap for this chat
+      fetch('/api/law-buddy/roadmap')
+        .then((response) => (response.ok ? response.json() : null))
+        .then((data) => {
+          if (data) {
+            const chatRoadmap = data.roadmaps.find(
+              (roadmap) => roadmap.chatId === chatId
+            )
+            setActiveRoadmap(chatRoadmap || null)
+          }
+        })
+        .catch((error) => console.error('Error loading roadmap:', error))
+
       // Close sidebar on mobile after loading chat
       setShowHistory(false)
       console.log('Chat loaded successfully')
@@ -410,6 +492,7 @@ export default function LawBuddyClientPage() {
     'What is tort law?',
     'Explain constitutional law',
     'Criminal law concepts',
+    '#plan Create a learning path for constitutional law',
   ]
 
   return (
@@ -616,6 +699,89 @@ export default function LawBuddyClientPage() {
             </div>
           </div>
         </div>
+
+        {/* Active Roadmap Display */}
+        {activeRoadmap && (
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-b border-blue-200 dark:border-blue-700 p-4">
+            <div className="max-w-4xl mx-auto">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                    <TrendingUp className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100">
+                      {activeRoadmap.title}
+                    </h3>
+                    <p className="text-sm text-blue-700 dark:text-blue-300">
+                      Learning Path: {activeRoadmap.topic}
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowRoadmapDropdown(!showRoadmapDropdown)}
+                  className="text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-800"
+                >
+                  <ChevronLeft
+                    className={`h-4 w-4 transition-transform ${
+                      showRoadmapDropdown ? 'rotate-90' : ''
+                    }`}
+                  />
+                </Button>
+              </div>
+
+              {showRoadmapDropdown && (
+                <div className="space-y-2">
+                  {activeRoadmap.roadmapProcesses?.map((process, index) => (
+                    <div
+                      key={process.id}
+                      className={`flex items-center space-x-3 p-3 rounded-lg border transition-all ${
+                        process.isCompleted
+                          ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700'
+                          : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700'
+                      }`}
+                    >
+                      <div
+                        className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium ${
+                          process.isCompleted
+                            ? 'bg-green-500 text-white'
+                            : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400'
+                        }`}
+                      >
+                        {process.isCompleted ? '✓' : process.order}
+                      </div>
+                      <div className="flex-1">
+                        <p
+                          className={`text-sm font-medium ${
+                            process.isCompleted
+                              ? 'text-green-900 dark:text-green-100 line-through'
+                              : 'text-slate-900 dark:text-slate-100'
+                          }`}
+                        >
+                          {process.title}
+                        </p>
+                        {process.description && (
+                          <p className="text-xs text-slate-600 dark:text-slate-400 mt-1">
+                            {process.description}
+                          </p>
+                        )}
+                      </div>
+                      {process.isCompleted && (
+                        <div className="text-xs text-green-600 dark:text-green-400">
+                          {process.completedAt
+                            ? new Date(process.completedAt).toLocaleDateString()
+                            : 'Completed'}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Messages Area */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 dark:bg-slate-900">

@@ -82,6 +82,47 @@ Student's Answer: ${
       }
     }
 
+    // Check for roadmap creation request
+    const isRoadmapRequest =
+      message.toLowerCase().includes('#plan') ||
+      message.toLowerCase().includes('plan a learning path') ||
+      message.toLowerCase().includes('create a roadmap')
+
+    // Get user's active roadmaps for context
+    let roadmapContext = ''
+    if (chatId) {
+      const activeRoadmaps = await prisma.learningRoadmap.findMany({
+        where: {
+          userId: session.user.id,
+          isActive: true,
+          chatId: chatId,
+        },
+        include: {
+          roadmapProcesses: {
+            orderBy: {
+              order: 'asc',
+            },
+          },
+        },
+      })
+
+      if (activeRoadmaps.length > 0) {
+        roadmapContext = `
+Active Learning Roadmaps:
+${activeRoadmaps
+  .map(
+    (roadmap) => `
+- ${roadmap.title} (${roadmap.topic})
+  Processes: ${roadmap.roadmapProcesses
+    .map((p) => `${p.order}. ${p.title} ${p.isCompleted ? '✓' : '○'}`)
+    .join(', ')}
+`
+  )
+  .join('\n')}
+        `
+      }
+    }
+
     // Prepare the system prompt for Law Buddy
     const systemPrompt = `You are Law Buddy, an AI assistant specialized in helping law students with CLAT preparation and legal studies.
 
@@ -90,6 +131,8 @@ ${
     ? `The student is asking about a specific test they've taken. Use this context to provide personalized help: ${testContext}`
     : ''
 }
+
+${roadmapContext ? `Current Learning Roadmaps: ${roadmapContext}` : ''}
 
 Guidelines:
 1. Provide clear, accurate explanations of legal concepts
@@ -100,6 +143,9 @@ Guidelines:
 6. If the student is asking about a specific test, reference their performance and provide targeted advice
 7. Keep responses concise but comprehensive
 8. Use legal terminology appropriately but explain complex terms
+9. If the user requests a learning roadmap (uses #plan tag or asks for "plan a learning path"), create a structured roadmap with 5-6 sequential processes
+10. When creating roadmaps, format them as: "ROADMAP: [Title] - [Topic]" followed by numbered processes
+11. Monitor chat for process completion and mark processes as done when the user demonstrates understanding
 
 Remember: You're helping a law student prepare for CLAT and understand legal concepts. Be patient, thorough, and encouraging.`
 
@@ -182,6 +228,108 @@ Remember: You're helping a law student prepare for CLAT and understand legal con
       )
     }
 
+    // Check if AI response contains a roadmap
+    const roadmapMatch = aiResponse.match(
+      /ROADMAP:\s*(.+?)\s*-\s*(.+?)(?:\n|$)/
+    )
+    let createdRoadmap = null
+
+    console.log('Roadmap detection:', {
+      isRoadmapRequest,
+      roadmapMatch,
+      aiResponse: aiResponse.substring(0, 200) + '...',
+    })
+
+    // Check for process completion indicators
+    const completionIndicators = [
+      'completed',
+      'finished',
+      'done',
+      'understood',
+      'got it',
+      'clear',
+      'makes sense',
+      'i see',
+      'i understand',
+    ]
+
+    const hasCompletionIndicator = completionIndicators.some(
+      (indicator) =>
+        aiResponse.toLowerCase().includes(indicator) ||
+        message.toLowerCase().includes(indicator)
+    )
+
+    let completedProcess = null
+    if (hasCompletionIndicator && chatId) {
+      // Find the next incomplete process in active roadmaps
+      const activeRoadmaps = await prisma.learningRoadmap.findMany({
+        where: {
+          userId: session.user.id,
+          isActive: true,
+          chatId: chatId,
+        },
+        include: {
+          roadmapProcesses: {
+            where: {
+              isCompleted: false,
+            },
+            orderBy: {
+              order: 'asc',
+            },
+            take: 1,
+          },
+        },
+      })
+
+      if (
+        activeRoadmaps.length > 0 &&
+        activeRoadmaps[0].roadmapProcesses.length > 0
+      ) {
+        const nextProcess = activeRoadmaps[0].roadmapProcesses[0]
+
+        // Mark the process as completed
+        await prisma.roadmapProcess.update({
+          where: {
+            id: nextProcess.id,
+          },
+          data: {
+            isCompleted: true,
+            completedAt: new Date(),
+          },
+        })
+
+        completedProcess = nextProcess
+        console.log('Marked process as completed:', nextProcess.id)
+
+        // Check if all processes are completed
+        const allProcesses = await prisma.roadmapProcess.findMany({
+          where: {
+            roadmapId: activeRoadmaps[0].id,
+          },
+        })
+
+        const allCompleted = allProcesses.every(
+          (process) => process.isCompleted
+        )
+
+        if (allCompleted) {
+          // Deactivate the roadmap
+          await prisma.learningRoadmap.update({
+            where: {
+              id: activeRoadmaps[0].id,
+            },
+            data: {
+              isActive: false,
+            },
+          })
+          console.log(
+            'Roadmap completed and deactivated:',
+            activeRoadmaps[0].id
+          )
+        }
+      }
+    }
+
     // Save or update chat in database
     let currentChatId = chatId
     console.log('Chat API - Current chatId:', currentChatId)
@@ -227,9 +375,80 @@ Remember: You're helping a law student prepare for CLAT and understand legal con
       }
     }
 
+    // Create roadmap if detected in AI response
+    if (roadmapMatch && isRoadmapRequest) {
+      const roadmapTitle = roadmapMatch[1].trim()
+      const roadmapTopic = roadmapMatch[2].trim()
+
+      console.log('Creating roadmap:', { roadmapTitle, roadmapTopic })
+
+      // Extract processes from the response
+      const processMatches = aiResponse.match(/(\d+)\.\s*(.+?)(?:\n|$)/g)
+      const processes = processMatches
+        ? processMatches.map((match) => {
+            const [, order, title] = match.match(/(\d+)\.\s*(.+)/)
+            return {
+              title: title.trim(),
+              description: '',
+              order: parseInt(order),
+            }
+          })
+        : []
+
+      console.log('Extracted processes:', processes)
+
+      if (processes.length > 0) {
+        try {
+          const roadmap = await prisma.learningRoadmap.create({
+            data: {
+              userId: session.user.id,
+              title: roadmapTitle,
+              topic: roadmapTopic,
+              processes: processes,
+              chatId: currentChatId,
+            },
+          })
+
+          // Create individual process records
+          await Promise.all(
+            processes.map((process, index) =>
+              prisma.roadmapProcess.create({
+                data: {
+                  roadmapId: roadmap.id,
+                  title: process.title,
+                  description: process.description,
+                  order: index + 1,
+                },
+              })
+            )
+          )
+
+          createdRoadmap = roadmap
+          console.log('Created roadmap successfully:', roadmap.id)
+        } catch (error) {
+          console.error('Error creating roadmap:', error)
+        }
+      }
+    }
+
     return NextResponse.json({
       response: aiResponse,
       chatId: currentChatId,
+      roadmap: createdRoadmap
+        ? {
+            id: createdRoadmap.id,
+            title: createdRoadmap.title,
+            topic: createdRoadmap.topic,
+            processes: createdRoadmap.processes,
+          }
+        : null,
+      completedProcess: completedProcess
+        ? {
+            id: completedProcess.id,
+            title: completedProcess.title,
+            order: completedProcess.order,
+          }
+        : null,
     })
   } catch (error) {
     console.error('Law Buddy chat error:', error)

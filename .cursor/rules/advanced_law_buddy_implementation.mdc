@@ -1,0 +1,35 @@
+# advanced learning planning
+
+- till now - here basically currently we can chat with ai reference the test and all + save history
+
+- if someone user says plan a learning path for me #plan tag user uses - then ai will generate the roadmap based on that topic  - roadmap will contain multiple processes 1, 2, 3 , 4, 5, 6,  every process will contain the title
+
+- the roadmap will contain the title too and will be saved on top in  chat history
+- user can create multiple roadmaps
+
+
+- the roadmap will be having a dropdown  where all processes are listed sequantially
+- processes will be completed it user will continue learning in same chat - ai will be having of that chat   for  taking reference how muc processes have been done
+
+- the processes will be automatically marked as completed by ai if ai marks them correct
+
+- the roadmap is gonna be nothing but the chat but it will take look when user completing which task
+
+user still have to chat
+
+if context of the process matches the chat then the process gets marked
+
+- after completion of the process  the the roadmap will be removed atomatically  are you understanding
+
+- for api take a look at the api - /api/law-buddy/chat use same api  and methods
+
+
+
+
+
+
+
+
+
+
+- dont remove current chat feature because its fine i want it as well as the roadmap feature on top too
