@@ -60,7 +60,7 @@ export async function POST(request) {
     const { sessionType, duration } = await request.json()
 
     // Create a new pomodoro session record
-    const session = await prisma.pomodoroSession.create({
+    const pomodoroSession = await prisma.pomodoroSession.create({
       data: {
         userId,
         sessionType, // 'study' or 'break'
@@ -71,7 +71,7 @@ export async function POST(request) {
 
     return NextResponse.json({
       success: true,
-      session,
+      session: pomodoroSession,
       message: 'Pomodoro session recorded successfully',
     })
   } catch (error) {
