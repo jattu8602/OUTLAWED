@@ -543,8 +543,7 @@ export default function LawBuddyClientPage() {
               >
                 <History className="h-4 w-4 dark:text-slate-100" />
               </Button>
-
-              <div className="flex items-center space-x-3">
+              <div className="hidden md:flex items-center space-x-3">
                 <div className="p-2.5 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-sm">
                   <Brain className="h-5 w-5 text-white" />
                 </div>
