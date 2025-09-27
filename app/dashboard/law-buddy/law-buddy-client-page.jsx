@@ -429,6 +429,31 @@ export default function LawBuddyClientPage() {
         })
         .catch((error) => console.error('Error loading roadmap:', error))
 
+      // Update chat title if it's generic
+      if (
+        chat.title === 'Law Buddy Chat' &&
+        chat.messages &&
+        chat.messages.length > 0
+      ) {
+        const firstMessage = chat.messages[0].content
+        const newTitle = generateChatTitle(firstMessage)
+        if (newTitle !== 'Law Buddy Chat') {
+          // Update the chat title in the database
+          fetch('/api/law-buddy/chat', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              chatId: chatId,
+              title: newTitle,
+            }),
+          }).catch((error) =>
+            console.error('Error updating chat title:', error)
+          )
+        }
+      }
+
       // Close sidebar on mobile after loading chat
       setShowHistory(false)
       console.log('Chat loaded successfully')
@@ -483,6 +508,88 @@ export default function LawBuddyClientPage() {
     // Replace @ with the actual test name in input
     const updatedMessage = inputMessage.replace(/@.*$/, `@${test.title}`)
     setInputMessage(updatedMessage)
+  }
+
+  const generateChatTitle = (message) => {
+    // Generate a meaningful title based on the first message
+    const words = message.toLowerCase().split(' ')
+
+    // Check for roadmap requests first
+    if (
+      words.includes('#plan') ||
+      words.includes('learning path') ||
+      words.includes('roadmap')
+    ) {
+      // Extract topic from the message
+      const topicMatch = message.match(/(?:for|about|on)\s+([^.!?]+)/i)
+      if (topicMatch) {
+        const topic = topicMatch[1].trim()
+        return `Learning Path: ${
+          topic.charAt(0).toUpperCase() + topic.slice(1)
+        }`
+      }
+      return 'Learning Path Discussion'
+    }
+
+    // Check for specific legal topics
+    if (words.includes('contract') || words.includes('agreement')) {
+      return 'Contract Law Discussion'
+    } else if (words.includes('tort') || words.includes('negligence')) {
+      return 'Tort Law Questions'
+    } else if (
+      words.includes('constitutional') ||
+      words.includes('fundamental')
+    ) {
+      return 'Constitutional Law Help'
+    } else if (words.includes('criminal') || words.includes('penal')) {
+      return 'Criminal Law Assistance'
+    } else if (words.includes('posco') || words.includes('pocso')) {
+      return 'POCSO Act Discussion'
+    } else if (words.includes('family') || words.includes('marriage')) {
+      return 'Family Law Discussion'
+    } else if (words.includes('property') || words.includes('land')) {
+      return 'Property Law Discussion'
+    } else if (words.includes('test') || words.includes('exam')) {
+      return 'Test Preparation Help'
+    } else if (words.includes('study') || words.includes('preparation')) {
+      return 'Study Strategy Discussion'
+    } else if (words.includes('explain') || words.includes('what is')) {
+      // Extract the topic being explained
+      const explainMatch = message.match(
+        /(?:explain|what is|tell me about)\s+([^.!?]+)/i
+      )
+      if (explainMatch) {
+        const topic = explainMatch[1].trim()
+        return `Explanation: ${topic.charAt(0).toUpperCase() + topic.slice(1)}`
+      }
+      return 'General Legal Discussion'
+    } else {
+      // Try to extract key legal terms
+      const legalTerms = [
+        'law',
+        'act',
+        'section',
+        'article',
+        'clause',
+        'provision',
+        'statute',
+        'code',
+      ]
+      const foundTerms = words.filter((word) => legalTerms.includes(word))
+
+      if (foundTerms.length > 0) {
+        return 'Legal Discussion'
+      }
+
+      // If message is short, use first few words
+      if (message.length <= 50) {
+        return message.charAt(0).toUpperCase() + message.slice(1)
+      }
+
+      // Use first few words as title
+      const firstWords = message.split(' ').slice(0, 4).join(' ')
+      return firstWords.charAt(0).toUpperCase() + firstWords.slice(1)
+    }
   }
 
   const quickStartPrompts = [
@@ -591,6 +698,14 @@ export default function LawBuddyClientPage() {
                     <p className="text-sm font-medium text-slate-900 dark:text-slate-100 truncate">
                       {chat.title}
                     </p>
+                    {/* Show first message preview */}
+                    {chat.messages && chat.messages.length > 0 && (
+                      <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 line-clamp-2">
+                        {chat.messages[0].content.length > 60
+                          ? chat.messages[0].content.substring(0, 60) + '...'
+                          : chat.messages[0].content}
+                      </p>
+                    )}
                     <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                       {new Date(chat.updatedAt).toLocaleDateString()}
                     </p>

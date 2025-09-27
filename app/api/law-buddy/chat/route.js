@@ -459,10 +459,66 @@ Remember: You're helping a law student prepare for CLAT and understand legal con
   }
 }
 
+// PUT - Update chat title
+export async function PUT(request) {
+  try {
+    const session = await getServerSession(authOptions)
+
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const { chatId, title } = await request.json()
+
+    if (!chatId || !title) {
+      return NextResponse.json(
+        { error: 'Chat ID and title are required' },
+        { status: 400 }
+      )
+    }
+
+    // Update the chat title
+    const updatedChat = await prisma.lawBuddyChat.update({
+      where: {
+        id: chatId,
+        userId: session.user.id, // Ensure user owns the chat
+      },
+      data: {
+        title: title,
+        updatedAt: new Date(),
+      },
+    })
+
+    return NextResponse.json({ success: true, chat: updatedChat })
+  } catch (error) {
+    console.error('Error updating chat title:', error)
+    return NextResponse.json(
+      { error: 'Failed to update chat title' },
+      { status: 500 }
+    )
+  }
+}
+
 function generateChatTitle(message) {
   // Generate a meaningful title based on the first message
   const words = message.toLowerCase().split(' ')
 
+  // Check for roadmap requests first
+  if (
+    words.includes('#plan') ||
+    words.includes('learning path') ||
+    words.includes('roadmap')
+  ) {
+    // Extract topic from the message
+    const topicMatch = message.match(/(?:for|about|on)\s+([^.!?]+)/i)
+    if (topicMatch) {
+      const topic = topicMatch[1].trim()
+      return `Learning Path: ${topic.charAt(0).toUpperCase() + topic.slice(1)}`
+    }
+    return 'Learning Path Discussion'
+  }
+
+  // Check for specific legal topics
   if (words.includes('contract') || words.includes('agreement')) {
     return 'Contract Law Discussion'
   } else if (words.includes('tort') || words.includes('negligence')) {
@@ -474,11 +530,51 @@ function generateChatTitle(message) {
     return 'Constitutional Law Help'
   } else if (words.includes('criminal') || words.includes('penal')) {
     return 'Criminal Law Assistance'
+  } else if (words.includes('posco') || words.includes('pocso')) {
+    return 'POCSO Act Discussion'
+  } else if (words.includes('family') || words.includes('marriage')) {
+    return 'Family Law Discussion'
+  } else if (words.includes('property') || words.includes('land')) {
+    return 'Property Law Discussion'
   } else if (words.includes('test') || words.includes('exam')) {
     return 'Test Preparation Help'
   } else if (words.includes('study') || words.includes('preparation')) {
     return 'Study Strategy Discussion'
+  } else if (words.includes('explain') || words.includes('what is')) {
+    // Extract the topic being explained
+    const explainMatch = message.match(
+      /(?:explain|what is|tell me about)\s+([^.!?]+)/i
+    )
+    if (explainMatch) {
+      const topic = explainMatch[1].trim()
+      return `Explanation: ${topic.charAt(0).toUpperCase() + topic.slice(1)}`
+    }
+    return 'General Legal Discussion'
   } else {
-    return 'Law Buddy Chat'
+    // Try to extract key legal terms
+    const legalTerms = [
+      'law',
+      'act',
+      'section',
+      'article',
+      'clause',
+      'provision',
+      'statute',
+      'code',
+    ]
+    const foundTerms = words.filter((word) => legalTerms.includes(word))
+
+    if (foundTerms.length > 0) {
+      return 'Legal Discussion'
+    }
+
+    // If message is short, use first few words
+    if (message.length <= 50) {
+      return message.charAt(0).toUpperCase() + message.slice(1)
+    }
+
+    // Use first few words as title
+    const firstWords = message.split(' ').slice(0, 4).join(' ')
+    return firstWords.charAt(0).toUpperCase() + firstWords.slice(1)
   }
 }
