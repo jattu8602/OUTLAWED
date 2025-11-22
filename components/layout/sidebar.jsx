@@ -132,18 +132,18 @@ export default function Sidebar({
           icon: Crown,
           badge: stats?.tests?.paid || '0',
         },
-          {
-            name: 'Test Series',
-            href: '/dashboard/test-series',
-            icon: FileText,
-            badge: stats?.tests?.series || '0',
+        {
+          name: 'Test Series',
+          href: '/dashboard/test-series',
+          icon: FileText,
+          badge: stats?.tests?.series || '0',
         },
         {
           name: 'Lexia AI',
           href: '/dashboard/lexia',
           icon: Sparkles,
           badge: 'New',
-      },
+        },
         {
           name: 'Law Buddy',
           href: '/dashboard/law-buddy',
@@ -212,8 +212,8 @@ export default function Sidebar({
                 <div className="w-11 h-11 bg-primary rounded-xl flex items-center justify-center shadow-lg dark:bg-slate-400">
                   <span className="text-primary-foreground font-bold text-lg dark:text-white">
                     <Image
-                      src="/outlawed.png"
-                      alt="OUTLAWED"
+                      src="/TestVerse.png"
+                      alt="TestVerse"
                       width={32}
                       height={32}
                     />
@@ -225,7 +225,7 @@ export default function Sidebar({
               </div>
               <div>
                 <h1 className="text-lg font-bold text-foreground dark:text-white">
-                  {isAdmin ? 'Admin Panel' : 'OUTLAWED'}
+                  {isAdmin ? 'Admin Panel' : 'TestVerse'}
                 </h1>
                 <p className="text-xs text-muted-foreground dark:text-white/70 font-medium">
                   {isAdmin ? 'Management Hub' : 'Study Platform'}

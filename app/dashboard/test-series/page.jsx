@@ -1,7 +1,7 @@
 import TestSeriesClientPage from './test-series-client-page'
 
 export const metadata = {
-  title: 'Test Series | OUTLAWED',
+  title: 'Test Series | TestVerse',
   description: 'Engage with curated series of tests to boost your preparation.',
 }
 

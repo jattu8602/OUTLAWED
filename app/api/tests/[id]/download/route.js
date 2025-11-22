@@ -163,17 +163,17 @@ function htmlTemplate({ test, passages, questions }) {
       <head>
         <meta charset="utf-8" />
         ${styles}
-        <title>${escapeHtml(test.title)} — Outlawed</title>
+        <title>${escapeHtml(test.title)} — TestVerse</title>
       </head>
       <body>
         <div class="brand-cover">
           <div>
-            <div class="brand-title">Outlawed</div>
-            <div class="brand-sub">www.outlawed.in</div>
+            <div class="brand-title">TestVerse</div>
+            <div class="brand-sub">www.TestVerse.in</div>
           </div>
           <div class="brand-sub">${escapeHtml(test.type)} Test</div>
         </div>
-        <h1>${escapeHtml(test.title)} — Outlawed</h1>
+        <h1>${escapeHtml(test.title)} — TestVerse</h1>
         <div class="small">
           Type: ${escapeHtml(test.type)} • Duration: ${
     test.durationInMinutes
@@ -186,7 +186,7 @@ function htmlTemplate({ test, passages, questions }) {
         <section style="margin-top: 40px; padding: 20px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center;">
           <h2 style="color: #1e40af; margin-bottom: 12px;">📝 To View Answers & Analysis</h2>
           <p style="color: #64748b; font-size: 14px; margin: 0;">
-            Attempt this test on <strong>www.outlawed.in</strong> to see correct answers and detailed explanations in the analysis section.
+            Attempt this test on <strong>www.TestVerse.in</strong> to see correct answers and detailed explanations in the analysis section.
           </p>
         </section>
       </body>
@@ -281,13 +281,13 @@ export async function GET(request, { params }) {
       displayHeaderFooter: true,
       headerTemplate: `<div style="font-size:10px; color:#6b7280; width:100%; padding:4px 12px;">
         <div style="display:flex; justify-content:space-between; width:100%;">
-          <span>Outlawed</span>
-          <span>www.outlawed.in</span>
+          <span>TestVerse</span>
+          <span>www.TestVerse.in</span>
         </div>
       </div>`,
       footerTemplate: `<div style="font-size:10px; color:#6b7280; width:100%; padding:4px 12px;">
         <div style="display:flex; justify-content:space-between; width:100%;">
-          <span>${escapeHtml(test.title)} — Outlawed</span>
+          <span>${escapeHtml(test.title)} — TestVerse</span>
           <span style="font-size:10px;">Page <span class="pageNumber"></span> of <span class="totalPages"></span></span>
         </div>
       </div>`,

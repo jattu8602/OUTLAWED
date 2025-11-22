@@ -9,14 +9,14 @@ import {
 const FAQSection = () => {
   const faqData = [
     {
-      question: 'What is Outlawed?',
+      question: 'What is TestVerse?',
       answer:
-        'Outlawed is a smart CLAT preparation platform offering free and paid mock tests, learning modules, analytics, and community features to help aspirants crack their exams.',
+        'TestVerse is a smart CLAT preparation platform offering free and paid mock tests, learning modules, analytics, and community features to help aspirants crack their exams.',
     },
     {
       question: 'Are the tests free?',
       answer:
-        'Yes! Outlawed offers free mock tests to get you started. You can later upgrade to unlock unlimited premium tests, advanced analytics, and leaderboard access.',
+        'Yes! TestVerse offers free mock tests to get you started. You can later upgrade to unlock unlimited premium tests, advanced analytics, and leaderboard access.',
     },
     {
       question: 'What do I get with the paid plan?',
@@ -42,14 +42,14 @@ const FAQSection = () => {
         'No upfront registration fee. You can start for free. Paid subscriptions are optional if you want premium features.',
     },
     {
-      question: 'How is Outlawed different from other CLAT platforms?',
+      question: 'How is TestVerse different from other CLAT platforms?',
       answer:
         'We focus on affordability, simplicity, and effectiveness. Our platform combines mock tests, learning modules, advanced analytics, and a smooth test-taking UI that keeps you focused.',
     },
     {
       question: 'Do you provide learning material?',
       answer:
-        'Yes, Outlawed offers curated learning modules for CLAT aspirants. These include GK, Legal, English, and Logical Reasoning practice.',
+        'Yes, TestVerse offers curated learning modules for CLAT aspirants. These include GK, Legal, English, and Logical Reasoning practice.',
     },
     {
       question: 'Will my progress be saved?',
@@ -59,7 +59,7 @@ const FAQSection = () => {
     {
       question: 'How do I stay updated about new tests?',
       answer:
-        'Outlawed sends smart notifications for new tests, performance reports, and leaderboard updates so you never miss a chance to improve.',
+        'TestVerse sends smart notifications for new tests, performance reports, and leaderboard updates so you never miss a chance to improve.',
     },
   ]
 
@@ -69,10 +69,10 @@ const FAQSection = () => {
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12 md:mb-16">
           <h2 className="text-4xl px-10 sm:text-3xl md:text-4xl lg:text-5xl font-black text-[#fcf2e8] mb-4 sm:mb-6">
-            Outlawed FAQ
+            TestVerse FAQ
           </h2>
           <p className="text-sm sm:text-base md:text-lg lg:text-xl text-[#ccc] max-w-3xl mx-auto px-2">
-            Everything you need to know about Outlawed — your CLAT preparation
+            Everything you need to know about TestVerse — your CLAT preparation
             companion.
           </p>
         </div>

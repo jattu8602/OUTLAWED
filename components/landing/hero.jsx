@@ -102,20 +102,19 @@ const Hero = () => {
   // GSAP ANIMATION SETUP
   // ============================================================================
   // useGSAP hook ensures animations are properly cleaned up when component unmounts
-useEffect(() => {
-  const marquee = document.querySelector('#marquee')
+  useEffect(() => {
+    const marquee = document.querySelector('#marquee')
 
-  gsap.to(marquee, {
-    xPercent: -90, // move by half its width
-    ease: 'none',
-    duration: 5, // slower = smoother (adjust based on feel)
-    repeat: -1,
-    modifiers: {
-      xPercent: gsap.utils.wrap(-200, 0), // seamless loop
-    },
-  })
-}, [])
-
+    gsap.to(marquee, {
+      xPercent: -90, // move by half its width
+      ease: 'none',
+      duration: 5, // slower = smoother (adjust based on feel)
+      repeat: -1,
+      modifiers: {
+        xPercent: gsap.utils.wrap(-200, 0), // seamless loop
+      },
+    })
+  }, [])
 
   useGSAP(() => {
     // Early return if required DOM elements aren't available
@@ -123,10 +122,9 @@ useEffect(() => {
       return
 
     // ============================================================================
-    // BACKGROUND "OUTLAWED" INFINITE FLOATING ANIMATION
+    // BACKGROUND "TestVerse" INFINITE FLOATING ANIMATION
     // ============================================================================
     // Top moves left → infinite loop
-
 
     // ============================================================================
     // TEXT ANIMATION ORDER RANDOMIZATION
@@ -800,7 +798,7 @@ useEffect(() => {
               textSegmentRefs.current[0] = el
             }}
           >
-            Try OUTLAWED for your clat Journey.
+            Try TestVerse for your clat Journey.
           </span>
           <div
             className="placeholder-icon"

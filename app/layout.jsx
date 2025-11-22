@@ -15,13 +15,13 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: {
-    default: 'OUTLAWED | CLAT Exam Tests | CLAT Exam Preparation',
-    template: '%s | OUTLAWED',
+    default: 'TestVerse | CLAT Exam Tests | CLAT Exam Preparation',
+    template: '%s | TestVerse',
   },
   description:
-    'Outlawed.in is a smart test-prep platform designed exclusively for CLAT aspirants. Powered by Daksh Madhyam, we help law students practice through expertly curated free and premium mock tests, crafted to match the exact CLAT exam pattern. Our mission is to make CLAT preparation affordable, accessible, and exam-focused — so every aspirant can test smarter, analyze performance deeply, and improve faster. Whether you are just starting out or aiming for a top rank, Outlawed.in is your trusted practice partner on the road to NLU success.',
+    'TestVerse.in is a smart test-prep platform designed exclusively for CLAT aspirants. Powered by Daksh Madhyam, we help law students practice through expertly curated free and premium mock tests, crafted to match the exact CLAT exam pattern. Our mission is to make CLAT preparation affordable, accessible, and exam-focused — so every aspirant can test smarter, analyze performance deeply, and improve faster. Whether you are just starting out or aiming for a top rank, TestVerse.in is your trusted practice partner on the road to NLU success.',
   keywords: [
-    'Outlawed',
+    'TestVerse',
     'CLAT',
     'CLAT 2026',
     'CLAT Preparation',
@@ -42,17 +42,16 @@ export const metadata = {
     'CLAT Coaching Alternative',
     'Daksh Madhyam',
   ],
-  metadataBase: new URL('https://outlawed.in/'),
+  metadataBase: new URL('https://TestVerse.in/'),
   openGraph: {
-    title: 'Outlawed | CLAT Mock Tests & Preparation',
+    title: 'TestVerse | CLAT Mock Tests & Preparation',
     description:
-      'Outlawed.in by Daksh Madhyam — your smart CLAT preparation platform with free and paid mock tests, detailed analysis, and exam-focused practice.',
-    url: 'https://outlawed.in/',
-    siteName: 'Outlawed',
+      'TestVerse.in by Daksh Madhyam — your smart CLAT preparation platform with free and paid mock tests, detailed analysis, and exam-focused practice.',
+    url: 'https://TestVerse.in/',
+    siteName: 'TestVerse',
     locale: 'en_US',
     type: 'website',
   },
-
 }
 
 export default function RootLayout({ children }) {

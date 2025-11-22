@@ -1,16 +1,9 @@
-"use client";
-import { useEffect, useRef, useState } from "react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import gsap from "gsap";
+'use client'
+import { useEffect, useRef, useState } from 'react'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import gsap from 'gsap'
 
-const RoundCard = ({
-  title,
-  subtitle,
-  description,
-  icon,
-  index,
-  bgColor,
-}) => {
+const RoundCard = ({ title, subtitle, description, icon, index, bgColor }) => {
   return (
     <div
       className="round-card relative w-full text-[#141414] rounded-2xl p-8 flex flex-col justify-between h-[500px] md:h-[350px]"
@@ -38,8 +31,8 @@ const RoundCard = ({
         <p className="text-base font-medium leading-relaxed">{description}</p>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // ============================================================================
 // SIMPLE CARD COMPONENT - Basic card with title, copy, and icon
@@ -68,41 +61,40 @@ const Card = ({ title, copy, index }) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
 // ============================================================================
 // SIMPLE REWARDS SECTION COMPONENT - No animations, mobile-friendly
 // ============================================================================
 const SimpleRewardsSection = () => {
- const rewards = [
-   {
-     title: '📘 Learning Modules',
-     copy: 'Access structured free learning modules covering essential topics to get you started.',
-     index: 1,
-   },
-   {
-     title: '📝 Smooth Test Experience',
-     copy: 'Take free tests with a clean and distraction-free UI designed for focus.',
-     index: 2,
-   },
-   {
-     title: '⭐ Advanced Profile',
-     copy: 'Unlock detailed progress analytics, badges, and personalized recommendations.',
-     index: 3,
-   },
-   {
-     title: '🔔 Smart Notifications',
-     copy: 'Stay on track with reminders, new test alerts, and performance updates.',
-     index: 4,
-   },
-   {
-     title: '🏆 Leaderboard',
-     copy: 'Compete with peers, climb the ranks, and showcase your preparation journey.',
-     index: 5,
-   },
- ]
-
+  const rewards = [
+    {
+      title: '📘 Learning Modules',
+      copy: 'Access structured free learning modules covering essential topics to get you started.',
+      index: 1,
+    },
+    {
+      title: '📝 Smooth Test Experience',
+      copy: 'Take free tests with a clean and distraction-free UI designed for focus.',
+      index: 2,
+    },
+    {
+      title: '⭐ Advanced Profile',
+      copy: 'Unlock detailed progress analytics, badges, and personalized recommendations.',
+      index: 3,
+    },
+    {
+      title: '🔔 Smart Notifications',
+      copy: 'Stay on track with reminders, new test alerts, and performance updates.',
+      index: 4,
+    },
+    {
+      title: '🏆 Leaderboard',
+      copy: 'Compete with peers, climb the ranks, and showcase your preparation journey.',
+      index: 5,
+    },
+  ]
 
   return (
     <div className="bg-[#141414] text-[#fcf2e8] py-4 px-4">
@@ -161,8 +153,8 @@ const SimpleRewardsSection = () => {
         </div> */}
       </div>
     </div>
-  );
-};
+  )
+}
 
 // ============================================================================
 // MAIN INFO CARD COMPONENT - How It Works section with animated cards
@@ -171,27 +163,27 @@ export default function InfoCard() {
   // ============================================================================
   // STATE & REFS - Client-side rendering and animation references
   // ============================================================================
-  const [isClient, setIsClient] = useState(false); // Ensure GSAP runs only on client
-  const heroRef = useRef(null); // Reference to the pinned hero section
-  const rewardsRef = useRef(null); // Reference to the rewards section for pinning
-  const cardRefs = useRef([]); // Array of hero card element references
-  const rewardsCardRefs = useRef([]); // Array of rewards card element references
+  const [isClient, setIsClient] = useState(false) // Ensure GSAP runs only on client
+  const heroRef = useRef(null) // Reference to the pinned hero section
+  const rewardsRef = useRef(null) // Reference to the rewards section for pinning
+  const cardRefs = useRef([]) // Array of hero card element references
+  const rewardsCardRefs = useRef([]) // Array of rewards card element references
 
   // ============================================================================
   // CLIENT-SIDE INITIALIZATION - Set client flag for GSAP compatibility
   // ============================================================================
   useEffect(() => {
-    setIsClient(true);
-  }, []);
+    setIsClient(true)
+  }, [])
 
   // ============================================================================
   // ANIMATION SETUP - GSAP ScrollTrigger configuration and card animations
   // ============================================================================
   useEffect(() => {
-    if (!isClient) return; // Wait for client-side rendering
+    if (!isClient) return // Wait for client-side rendering
 
     const initAnimation = () => {
-      console.log("Initializing InfoCard hero animation...");
+      console.log('Initializing InfoCard hero animation...')
 
       // ============================================================================
       // PHASE 1: INITIAL CARD POSITIONS - Set cards below viewport (100% y)
@@ -201,18 +193,18 @@ export default function InfoCard() {
       cardRefs.current.forEach((card) => {
         if (card) {
           gsap.set(card, {
-            y: "100%", // Position cards 100% below their container
-          });
+            y: '100%', // Position cards 100% below their container
+          })
         }
-      });
+      })
       rewardsCardRefs.current.forEach((card) => {
         if (card) {
           gsap.set(card, {
-            y: "300%", // Position rewards cards 100% below their container
-          });
+            y: '300%', // Position rewards cards 100% below their container
+          })
         }
-      });
-      console.log("Rewards section entered - Cards set to 100% y position");
+      })
+      console.log('Rewards section entered - Cards set to 100% y position')
       // ============================================================================
       // PHASE 2: SCROLL TRIGGER CONFIGURATION - Pin section and control animations
       // ============================================================================
@@ -220,41 +212,41 @@ export default function InfoCard() {
         ScrollTrigger.create({
           trigger: heroRef.current, // Element that triggers the animation
           pin: true, // Pin the hero section during scroll
-          start: "top top", // Start pinning when top of hero hits top of viewport
+          start: 'top top', // Start pinning when top of hero hits top of viewport
           end: `+=${window.innerHeight * 2}`, // 4 viewport heights of scroll space
           pinSpacing: true, // Maintain scroll space for pinned element
           markers: false, // Disable debug markers in production
           onUpdate: (self) => {
-            const progress = self.progress; // Scroll progress from 0 to 1
+            const progress = self.progress // Scroll progress from 0 to 1
 
             // ============================================================================
             // PHASE 3: CARD ANIMATION LOGIC - Two-phase card movement
             // ============================================================================
             if (cardRefs.current[0] && cardRefs.current[1]) {
-              const firstCard = cardRefs.current[0]; // Round 1 card reference
-              const secondCard = cardRefs.current[1]; // Round 2 card reference
+              const firstCard = cardRefs.current[0] // Round 1 card reference
+              const secondCard = cardRefs.current[1] // Round 2 card reference
 
               // ============================================================================
               // RESPONSIVE POSITIONING - Adjust for mobile vs desktop
               // ============================================================================
-              const isMobile = window.innerWidth < 768; // Mobile breakpoint check
-              const mobileOffset = isMobile ? 10 : 0; // 10% higher positioning on mobile
+              const isMobile = window.innerWidth < 768 // Mobile breakpoint check
+              const mobileOffset = isMobile ? 10 : 0 // 10% higher positioning on mobile
 
               // ============================================================================
               // FIRST CARD ANIMATION - Slides up from bottom to center position
               // ============================================================================
               if (progress <= 0.5) {
                 // Phase 1: First card moves from 100% to target position (0-50% scroll)
-                const firstCardProgress = progress / 0.5; // Normalize progress to 0-1
-                const targetY = 40 - mobileOffset; // Target: 30% on mobile, 40% on desktop
+                const firstCardProgress = progress / 0.5 // Normalize progress to 0-1
+                const targetY = 40 - mobileOffset // Target: 30% on mobile, 40% on desktop
                 gsap.set(firstCard, {
                   y: `${100 - (100 - targetY) * firstCardProgress}%`, // Smooth interpolation
-                });
+                })
               } else {
                 // Phase 2: First card stays at target position (50-100% scroll)
                 gsap.set(firstCard, {
                   y: `${40 - mobileOffset}%`, // Maintain final position
-                });
+                })
               }
 
               // ============================================================================
@@ -262,20 +254,20 @@ export default function InfoCard() {
               // ============================================================================
               if (progress >= 0.5) {
                 // Phase 2: Second card moves from 150% to same position as first (50-100% scroll)
-                const secondCardProgress = (progress - 0.5) / 0.5; // Normalize progress to 0-1
-                const targetY = 40 - mobileOffset; // Same target as first card
+                const secondCardProgress = (progress - 0.5) / 0.5 // Normalize progress to 0-1
+                const targetY = 40 - mobileOffset // Same target as first card
                 gsap.set(secondCard, {
                   y: `${150 - (150 - targetY) * secondCardProgress}%`, // Smooth interpolation from 150% to targetY
-                });
+                })
               } else {
                 // Phase 1: Second card stays below viewport (0-50% scroll)
                 gsap.set(secondCard, {
-                  y: "150%", // Keep hidden below viewport
-                });
+                  y: '150%', // Keep hidden below viewport
+                })
               }
             }
           },
-        });
+        })
       }
 
       // ============================================================================
@@ -285,7 +277,7 @@ export default function InfoCard() {
         ScrollTrigger.create({
           trigger: rewardsRef.current, // Element that triggers the pinning
           pin: true, // Pin the rewards section during scroll
-          start: "top top", // Start pinning when top of rewards hits top of viewport
+          start: 'top top', // Start pinning when top of rewards hits top of viewport
           end: `+=${window.innerHeight * 3}`, // 3 viewport heights of scroll space (increased from 2)
           pinSpacing: true, // Maintain scroll space for pinned element
           markers: false, // Disable debug markers in production
@@ -296,78 +288,78 @@ export default function InfoCard() {
             // When we enter the rewards section, set all rewards cards to 300% y position
             // This creates a starting point for building animations from this section
             console.log(
-              "Rewards section entered - Rewards cards set to 300% y position"
-            );
+              'Rewards section entered - Rewards cards set to 300% y position'
+            )
           },
           onUpdate: (self) => {
             // ============================================================================
             // REWARDS SECTION SCROLL ANIMATION - Progressive card reveals
             // ============================================================================
-            const progress = self.progress; // Scroll progress from 0 to 1
+            const progress = self.progress // Scroll progress from 0 to 1
 
             // Animate each rewards card with staggered timing
             rewardsCardRefs.current.forEach((card, index) => {
               if (card) {
                 // Calculate individual card progress with staggered delay
-                const cardDelay = index * 0.12; // Each card starts 12% later (reduced from 15%)
+                const cardDelay = index * 0.12 // Each card starts 12% later (reduced from 15%)
                 const cardProgress = Math.max(
                   0,
                   Math.min(1, (progress - cardDelay) / 0.25)
-                ); // 25% duration per card (reduced from 30%)
+                ) // 25% duration per card (reduced from 30%)
 
                 if (cardProgress > 0) {
                   // Animate card from 300% to 0% (slide up into view)
                   gsap.set(card, {
                     y: `${300 - 300 * cardProgress}%`, // Smooth interpolation from 300% to 0%
-                  });
+                  })
                 } else {
                   // Keep card at 300% until its turn
                   gsap.set(card, {
-                    y: "300%",
-                  });
+                    y: '300%',
+                  })
                 }
               }
-            });
+            })
           },
-        });
+        })
       }
-    };
+    }
 
     // ============================================================================
     // ANIMATION INITIALIZATION - Delay to ensure DOM is ready
     // ============================================================================
-    const timer = setTimeout(initAnimation, 1000); // 1 second delay for DOM stability
+    const timer = setTimeout(initAnimation, 1000) // 1 second delay for DOM stability
 
     // ============================================================================
     // CLEANUP - Remove all ScrollTriggers on component unmount
     // ============================================================================
     return () => {
-      clearTimeout(timer); // Clear initialization timer
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill()); // Kill all triggers
-    };
-  }, [isClient]);
+      clearTimeout(timer) // Clear initialization timer
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill()) // Kill all triggers
+    }
+  }, [isClient])
 
   // ============================================================================
   // ROUND DATA - Competition structure and content for each round
   // ============================================================================
- const rounds = [
-   {
-     title: 'Free Tests',
-     subtitle: 'Get started without any cost',
-     description: `
+  const rounds = [
+    {
+      title: 'Free Tests',
+      subtitle: 'Get started without any cost',
+      description: `
       • Access limited mock tests
       • Basic performance analysis
       • Limited question types (MCQs only)
       • Practice mode available
       • Community discussions unlocked
     `,
-     icon: '🆓', // Free icon
-     bgColor: '#d4f8e8', // Soft green for free
-   },
-   {
-     title: 'Paid Tests',
-     subtitle: 'Unlock premium features',
-     description: `
+      icon: '🆓', // Free icon
+      bgColor: '#d4f8e8', // Soft green for free
+    },
+    {
+      title: 'Paid Tests',
+      subtitle: 'Unlock premium features',
+      description: `
       • All Free Test features
       • Unlimited full-length mocks
       • Sectional & topic-wise tests
@@ -377,17 +369,16 @@ export default function InfoCard() {
       • Exclusive leaderboard rankings
       • Access to curated GK/Legal/Current Affairs material
     `,
-     icon: '💎', // Premium diamond icon
-     bgColor: '#ffe4b5', // Warm premium orange/yellow
-   },
- ]
-
+      icon: '💎', // Premium diamond icon
+      bgColor: '#ffe4b5', // Warm premium orange/yellow
+    },
+  ]
 
   // ============================================================================
   // CLIENT-SIDE RENDERING CHECK - Return null until client is ready
   // ============================================================================
   if (!isClient) {
-    return null; // Prevent hydration mismatch with GSAP
+    return null // Prevent hydration mismatch with GSAP
   }
 
   // ============================================================================
@@ -484,7 +475,7 @@ export default function InfoCard() {
                 <div className="info-card-inner relative will-change-transform w-full h-full p-[2em] flex flex-col gap-[0.5rem]">
                   <div className="card-content flex flex-col text-left w-[80%]">
                     <h1 className="text-[3rem] font-semibold leading-none mb-[1.5em] md:mb-[1rem]">
-                      Why Choose Outlawed?
+                      Why Choose TestVerse?
                     </h1>
                   </div>
                   <p className="text-[1.05rem] font-medium text-left">

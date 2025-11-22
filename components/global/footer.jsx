@@ -15,11 +15,11 @@ export default function Footer() {
               <div className="flex items-center gap-3">
                 <img
                   src="/out.png"
-                  alt="OUTLAWED Logo"
+                  alt="TestVerse Logo"
                   className="h-10 w-auto object-contain"
                 />
                 <span className="text-xl font-extrabold tracking-wide">
-                  OUTLAWED
+                  TestVerse
                 </span>
               </div>
               <p className="mt-4 text-sm text-gray-500 leading-relaxed">
@@ -97,7 +97,7 @@ export default function Footer() {
           {/* Bottom bar */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-8 md:px-10 lg:px-12 py-5">
             <p className="text-xs sm:text-sm text-gray-500">
-              © 2025 OUTLAWED. All rights reserved.
+              © 2025 TestVerse. All rights reserved.
             </p>
             <div className="flex items-center gap-4 text-xs sm:text-sm text-gray-500">
               <a className="hover:text-gray-900 transition-colors" href="/">
