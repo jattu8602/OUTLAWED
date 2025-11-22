@@ -213,7 +213,7 @@ export default function Sidebar({
                   <span className="text-primary-foreground font-bold text-lg dark:text-white">
                     <Image
                       src="/TestVerse.png"
-                      alt="TestVerse"
+                      alt="TV"
                       width={32}
                       height={32}
                     />
