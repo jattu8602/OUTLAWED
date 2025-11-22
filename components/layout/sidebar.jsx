@@ -162,12 +162,12 @@ export default function Sidebar({
           icon: Calendar,
           badge: null,
         },
-        // {
-        //   name: 'Subscription',
-        //   href: '/dashboard/payments',
-        //   icon: CreditCard,
-        //   badge: null,
-        // },
+        {
+          name: 'Subscription',
+          href: '/dashboard/payments',
+          icon: CreditCard,
+          badge: null,
+        },
         // {
         //   name: 'Notifications',
         //   href: '/dashboard/notifications',
