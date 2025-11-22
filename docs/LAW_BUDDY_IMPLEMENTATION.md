@@ -1,8 +1,8 @@
-# Law Buddy - AI Chat Assistant Implementation
+# Chat Buddy - AI Chat Assistant Implementation
 
 ## Overview
 
-Law Buddy is an AI-powered chat assistant designed specifically for law students preparing for CLAT. It provides personalized study assistance, test-specific guidance, and comprehensive legal concept explanations.
+Chat Buddy is an AI-powered chat assistant designed specifically for law students preparing for CLAT. It provides personalized study assistance, test-specific guidance, and comprehensive legal concept explanations.
 
 ## Features
 

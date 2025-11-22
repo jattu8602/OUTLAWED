@@ -3,7 +3,7 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient()
 
 async function main() {
-  console.log('Adding Law Buddy model to database...')
+  console.log('Adding Chat Buddy model to database...')
 
   try {
     // The schema changes will be applied when you run prisma db push

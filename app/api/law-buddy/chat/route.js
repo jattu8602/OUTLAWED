@@ -123,8 +123,8 @@ ${activeRoadmaps
       }
     }
 
-    // Prepare the system prompt for Law Buddy
-    const systemPrompt = `You are Law Buddy, an AI assistant specialized in helping law students with CLAT preparation and legal studies.
+    // Prepare the system prompt for Chat Buddy
+    const systemPrompt = `You are Chat Buddy, an AI assistant specialized in helping law students with CLAT preparation and legal studies.
 
 ${
   testContext
@@ -451,7 +451,7 @@ Remember: You're helping a law student prepare for CLAT and understand legal con
         : null,
     })
   } catch (error) {
-    console.error('Law Buddy chat error:', error)
+    console.error('Chat Buddy chat error:', error)
     return NextResponse.json(
       { error: 'Failed to process chat message' },
       { status: 500 }

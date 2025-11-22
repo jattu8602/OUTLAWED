@@ -431,13 +431,13 @@ export default function LawBuddyClientPage() {
 
       // Update chat title if it's generic
       if (
-        chat.title === 'Law Buddy Chat' &&
+        chat.title === 'Chat Buddy Chat' &&
         chat.messages &&
         chat.messages.length > 0
       ) {
         const firstMessage = chat.messages[0].content
         const newTitle = generateChatTitle(firstMessage)
-        if (newTitle !== 'Law Buddy Chat') {
+        if (newTitle !== 'Chat Buddy Chat') {
           // Update the chat title in the database
           fetch('/api/law-buddy/chat', {
             method: 'PUT',
@@ -747,7 +747,7 @@ export default function LawBuddyClientPage() {
                 </div>
                 <div>
                   <h1 className="text-xl font-semibold text-slate-900 dark:text-slate-100">
-                    Law Buddy
+                    Chat Buddy
                   </h1>
                   <p className="text-sm text-slate-500 dark:text-slate-400">
                     Your AI study companion
@@ -906,7 +906,7 @@ export default function LawBuddyClientPage() {
                 <Brain className="h-10 w-10 text-blue-600 dark:text-blue-400" />
               </div>
               <h3 className="text-xl font-semibold text-slate-900 dark:text-slate-100 mb-3">
-                Welcome to Law Buddy!
+                Welcome to Chat Buddy!
               </h3>
               <p className="text-slate-600 dark:text-slate-400 mb-6 max-w-md leading-relaxed">
                 I'm here to help you with legal concepts, test preparation, and
@@ -1002,7 +1002,7 @@ export default function LawBuddyClientPage() {
                   <div className="flex items-center space-x-2">
                     <Loader2 className="h-4 w-4 animate-spin text-blue-600 dark:text-blue-400" />
                     <span className="text-sm text-slate-600 dark:text-slate-400">
-                      Law Buddy is thinking...
+                      Chat Buddy is thinking...
                     </span>
                   </div>
                 </div>

@@ -145,7 +145,7 @@ export default function Sidebar({
           badge: 'New',
         },
         {
-          name: 'Law Buddy',
+          name: 'Chat Buddy',
           href: '/dashboard/law-buddy',
           icon: MessageSquare,
           badge: null,
