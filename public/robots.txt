@@ -4,5 +4,5 @@ Allow: /
 
 
 # Sitemap location (replace with your actual sitemap URLs)
-Sitemap: https://TestVerse.in/sitemap.xml
+Sitemap: https://outlawed-iota.vercel.app/sitemap.xml
 

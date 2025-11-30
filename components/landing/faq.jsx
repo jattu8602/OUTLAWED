@@ -11,7 +11,7 @@ const FAQSection = () => {
     {
       question: 'What is TestVerse?',
       answer:
-        'TestVerse is a smart CLAT preparation platform offering free and paid mock tests, learning modules, analytics, and community features to help aspirants crack their exams.',
+        'TestVerse is a smart exam preparation platform offering free and paid mock tests, learning modules, analytics, and community features to help aspirants crack their competitive exams.',
     },
     {
       question: 'Are the tests free?',
@@ -42,14 +42,14 @@ const FAQSection = () => {
         'No upfront registration fee. You can start for free. Paid subscriptions are optional if you want premium features.',
     },
     {
-      question: 'How is TestVerse different from other CLAT platforms?',
+      question: 'How is TestVerse different from other platforms?',
       answer:
         'We focus on affordability, simplicity, and effectiveness. Our platform combines mock tests, learning modules, advanced analytics, and a smooth test-taking UI that keeps you focused.',
     },
     {
       question: 'Do you provide learning material?',
       answer:
-        'Yes, TestVerse offers curated learning modules for CLAT aspirants. These include GK, Legal, English, and Logical Reasoning practice.',
+        'Yes, TestVerse offers curated learning modules for various competitive exams. These include GK, English, Logical Reasoning, and more.',
     },
     {
       question: 'Will my progress be saved?',
@@ -72,7 +72,7 @@ const FAQSection = () => {
             TestVerse FAQ
           </h2>
           <p className="text-sm sm:text-base md:text-lg lg:text-xl text-[#ccc] max-w-3xl mx-auto px-2">
-            Everything you need to know about TestVerse — your CLAT preparation
+            Everything you need to know about TestVerse — your exam preparation
             companion.
           </p>
         </div>

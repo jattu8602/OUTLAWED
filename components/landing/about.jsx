@@ -27,14 +27,14 @@ const TextReveal = () => {
     // TEXT PROCESSING: Split text into word elements and highlight keywords
     const animeTextParagraphs = document.querySelectorAll('.anime-text p')
     const keywords = [
-      'clat',
+      'exam',
       'aspirants',
       'mock',
       'tests',
-      'exam',
+      'practice',
       'affordable',
       'analyze',
-      'nlu',
+      'success',
     ]
 
     animeTextParagraphs.forEach((paragraph) => {
@@ -209,16 +209,16 @@ const TextReveal = () => {
           </h1>
           <div className="text-white anime-text w-full max-w-[80vw] sm:max-w-[75vw] md:max-w-[65vw] lg:max-w-[50vw] xl:max-w-[55vw] space-y-3 sm:space-y-4 md:space-y-6 text-[0.3rem] sm:text-[clamp(0.5rem,1.2vw,0.85rem)] md:text-[clamp(0.6rem,1.4vw,0.95rem)] lg:text-[clamp(0.7rem,1.6vw,1.05rem)] xl:text-[clamp(0.8rem,1.8vw,1.4rem)]">
             <p className="text-center md:text-justify font-black leading-relaxed px-2 sm:px-8 md:px-12">
-              TestVerse.in is a smart test-prep platform built exclusively for
-              CLAT aspirants. TestVerse helps law students practice with
-              expertly curated mock tests that match the exact CLAT exam
+              outlawed-iota.vercel.app is a smart test-prep platform built for all competitive
+              exam aspirants. TestVerse helps students practice with
+              expertly curated mock tests that match the exact exam
               pattern.
             </p>
             <p className="text-center md:text-justify font-black leading-relaxed px-2 sm:px-8 md:px-12">
-              Our mission is to make CLAT preparation affordable, accessible,
-              and exam-focused — so every aspirant can analyze performance
+              Our mission is to make exam preparation affordable, accessible,
+              and focused — so every aspirant can analyze performance
               deeply and improve faster. Whether starting out or aiming for a
-              top rank, TestVerse.in is your trusted partner on the road to NLU
+              top rank, outlawed-iota.vercel.app is your trusted partner on the road to
               success.
             </p>
           </div>
@@ -230,7 +230,7 @@ const TextReveal = () => {
           <div className="w-full h-full mx-auto flex flex-col justify-center items-center text-center rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-xl bg-[#f9ffa5] p-4 sm:p-6 md:p-8">
             {/* Headline */}
             <h1 className="w-full max-w-[95vw] sm:max-w-[90vw] md:max-w-[80vw] lg:max-w-[70vw] xl:max-w-[90vw] text-[#141414] font-black leading-relaxed px-2 sm:px-4 mb-6 sm:mb-8 md:mb-10 lg:mb-12 text-[clamp(1.8rem,3vw,3rem)] sm:text-[clamp(1.2rem,2vw,1.6rem)] md:text-[clamp(2.5rem,4vw,4.5rem)]">
-              India’s Most Affordable CLAT Test Series 🚀
+              India’s Most Affordable Exam Test Series 🚀
             </h1>
 
             {/* Stats Grid */}
@@ -252,7 +252,7 @@ const TextReveal = () => {
 
               <div className="flex flex-col items-center">
                 <h2 className="font-black mb-2">Top 10</h2>
-                <p className="font-medium">NLU Style Pattern</p>
+                <p className="font-medium">Exam Style Pattern</p>
               </div>
 
               <div className="flex flex-col items-center">
@@ -269,7 +269,7 @@ const TextReveal = () => {
             {/* CTA Footer */}
             <div className="w-full text-center">
               <p className="text-[#141414] font-bold text-[clamp(1.3rem,3vw,2.6rem)] sm:text-[clamp(1.1rem,3.8vw,6.3rem)] md:text-[clamp(1.4rem,3.2vw,2rem)]">
-                Start Your CLAT Journey with TestVerse.in 💡
+                Start Your Exam Journey with outlawed-iota.vercel.app 💡
               </p>
             </div>
           </div>

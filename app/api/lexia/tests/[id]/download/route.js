@@ -174,7 +174,7 @@ function htmlTemplate({
         <div class="brand-cover">
           <div>
             <div class="brand-title">TestVerse</div>
-            <div class="brand-sub">www.TestVerse.in</div>
+            <div class="brand-sub">www.outlawed-iota.vercel.app</div>
           </div>
           <div class="brand-sub">${escapeHtml(test.type)} Test</div>
         </div>
@@ -191,7 +191,7 @@ function htmlTemplate({
         <section style="margin-top: 40px; padding: 20px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center;">
           <h2 style="color: #1e40af; margin-bottom: 12px;">📝 To View Answers & Analysis</h2>
           <p style="color: #64748b; font-size: 14px; margin: 0;">
-            Attempt this test on <strong>www.TestVerse.in</strong> to see correct answers and detailed explanations in the analysis section.
+            Attempt this test on <strong>www.outlawed-iota.vercel.app</strong> to see correct answers and detailed explanations in the analysis section.
           </p>
         </section>
       </body>
@@ -326,7 +326,7 @@ export async function GET(request, { params }) {
       headerTemplate: `<div style="font-size:10px; color:#6b7280; width:100%; padding:4px 12px;">
         <div style="display:flex; justify-content:space-between; width:100%;">
           <span>TestVerse</span>
-          <span>www.TestVerse.in</span>
+          <span>www.outlawed-iota.vercel.app</span>
         </div>
       </div>`,
       footerTemplate: `<div style="font-size:10px; color:#6b7280; width:100%; padding:4px 12px;">

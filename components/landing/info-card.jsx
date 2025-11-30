@@ -409,7 +409,7 @@ export default function InfoCard() {
             <p className="text-[#ccc] text-sm sm:text-base md:text-lg lg:text-xl font-medium leading-relaxed rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-3xl border border-dashed border-[rgb(60,60,60)] p-4 sm:p-6 md:p-8 lg:p-10 mt-10">
               Free and paid mock tests designed to test your skills, accuracy,
               and speed. With detailed analytics, prove you have what it takes
-              to crack CLAT with confidence.
+              to crack your exam with confidence.
             </p>
           </div>
 
@@ -442,7 +442,7 @@ export default function InfoCard() {
         <p className="text-[#ccc] text-base font-medium leading-relaxed mb-8">
           Free and paid mock tests designed to test your skills, accuracy, and
           speed. With detailed analytics, prove you have what it takes to crack
-          CLAT with confidence.
+          your exam with confidence.
         </p>
 
         <div className="flex flex-col gap-6">

@@ -798,7 +798,7 @@ const Hero = () => {
               textSegmentRefs.current[0] = el
             }}
           >
-            Try TestVerse for your clat Journey.
+            Try TestVerse for your Exam Journey.
           </span>
           <div
             className="placeholder-icon"
@@ -862,8 +862,8 @@ const Hero = () => {
               textSegmentRefs.current[5] = el
             }}
           >
-            This is Out
-            <span className="text-pink-300">lawed.</span>
+            This is Test
+            <span className="text-pink-300">Verse.</span>
           </span>
         </h1>
 

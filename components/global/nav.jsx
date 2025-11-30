@@ -21,7 +21,7 @@ const Navbar = () => {
         {/* Logo - only visible on desktop */}
         <Copy animateOnScroll={false} delay={0.2}>
           <Link
-            href="https://www.TestVerse.in/"
+            href="https://www.outlawed-iota.vercel.app/"
             className={`hidden md:flex ${buttonClasses} text-xl md:text-2xl`}
           >
             TestVerse
