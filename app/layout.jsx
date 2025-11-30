@@ -48,7 +48,7 @@ export const metadata = {
   openGraph: {
     title: 'TestVerse | Mock Tests & Preparation for All Exams',
     description:
-      'outlawed-iota.vercel.app by Daksh Madhyam — your smart exam preparation platform with free and paid mock tests, detailed analysis, and exam-focused practice for all competitive exams.',
+      'outlawed-iota.vercel.app — your smart exam preparation platform with free and paid mock tests, detailed analysis, and exam-focused practice for all competitive exams.',
     url: 'https://outlawed-iota.vercel.app/',
     siteName: 'TestVerse',
     locale: 'en_US',
