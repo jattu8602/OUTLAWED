@@ -100,7 +100,7 @@ function LoginContent() {
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
             Welcome to TestVerse
           </h2>
-          <p className="text-gray-600">Your gateway to law school success</p>
+          <p className="text-gray-600">Your gateway to exam success</p>
         </div>
 
         {/* Login Card */}
@@ -133,7 +133,7 @@ function LoginContent() {
             {/* Features */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-gray-900 text-center mb-6">
-                Access Premium CLAT Preparation
+                Access Premium Exam Preparation
               </h3>
 
               <div className="space-y-3">
