@@ -212,7 +212,7 @@ export default function DashboardClientPage() {
                 👋
               </h1>
               <p className="text-xs sm:text-sm lg:text-lg text-slate-600 dark:text-slate-300 mt-1">
-                Ready to ace your CLAT preparation?
+                Ready to ace your Exam preparation?
               </p>
             </div>
           </div>
