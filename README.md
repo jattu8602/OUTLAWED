@@ -24,6 +24,18 @@ It replicates the **real CLAT exam experience** with **120-question passage-rich
 
 ---
 
+
+## 🗺️ System Architecture
+```mermaid
+graph TD
+    Client[Next.js Web Client] <-->|Auth & CRUD Requests| NextServer[Next.js App Router / Node.js]
+    Client <-->|AI Tasks / Heavy Analytics| FastAPI[FastAPI Backend]
+    NextServer <-->|ORM| MongoDB[(MongoDB Database)]
+    FastAPI <-->|Write/Read Logs| MongoDB
+    FastAPI <-->|Vector Store / Search| VectorDB[(Vector DB)]
+    FastAPI <-->|AI Services| LLM[Gemini RAG / GPT / Whisper NLP
+
+```
 ## 🚀 Key Features
 
 ### 👩‍🎓 Student Features
